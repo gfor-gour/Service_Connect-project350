@@ -1,7 +1,7 @@
 "use client"; // Ensure this is a Client Component
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Corrected import for App Directory
+import { useRouter } from 'next/navigation'; // Correct import for App Directory
 import Link from 'next/link';
 
 const Login = () => {
@@ -21,7 +21,6 @@ const Login = () => {
     setIsSuccess(false);
 
     try {
-      // Updated URL to use the environment variable for backend URL
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/login`, // Corrected login URL
         {
@@ -49,16 +48,23 @@ const Login = () => {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch('/api/auth/forgot-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: resetEmail }),
-    });
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/forgot-password`, // Corrected forgot-password URL
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: resetEmail }),
+        }
+      );
 
-    if (response.ok) {
-      alert('Check your email for reset instructions');
-    } else {
-      alert('Failed to send reset instructions');
+      if (response.ok) {
+        alert('Check your email for reset instructions');
+      } else {
+        alert('Failed to send reset instructions');
+      }
+    } catch (err) {
+      alert('An error occurred. Please try again later.');
     }
   };
 
