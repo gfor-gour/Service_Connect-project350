@@ -7,7 +7,7 @@ const Home = () => {
     <>
       {/* Navbar */}
       <Navbar />
-
+      
       {/* Main Content */}
       <main className="bg-white dark:bg-black text-black dark:text-white min-h-screen">
         {/* Hero Section */}

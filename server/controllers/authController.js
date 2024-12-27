@@ -26,4 +26,3 @@ exports.getDashboard = async (req, res) => {
   // This is just a placeholder. Implement your dashboard logic here.
   res.status(200).json({ message: 'Provider dashboard' });
 };
-
