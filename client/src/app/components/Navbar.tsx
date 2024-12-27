@@ -28,7 +28,7 @@ const Navbar = () => {
             href="/about"
             className="text-black dark:text-white hover:underline"
           >
-            About
+            About 
           </Link>
         </li>
         <li>
