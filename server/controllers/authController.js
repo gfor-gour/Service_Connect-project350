@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
+// Send email utility function
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -17,18 +18,30 @@ const sendEmail = async (options) => {
     from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
     to: options.email,
     subject: options.subject,
-    text: options.message
+    text: options.message,
+    html: options.html
   };
 
   try {
-    await transporter.sendMail(message);
-    console.log('Email sent successfully');
+    console.log('Attempting to send email with options:', {
+      to: options.email,
+      subject: options.subject,
+      smtpHost: process.env.SMTP_HOST,
+      smtpPort: process.env.SMTP_PORT,
+      smtpUser: process.env.SMTP_EMAIL
+    });
+
+    const info = await transporter.sendMail(message);
+    console.log('Email sent successfully:', info.response);
+    console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+    return info;
   } catch (error) {
     console.error('Error sending email:', error);
-    throw new Error('Email could not be sent');
+    throw new Error('Email could not be sent: ' + error.message);
   }
 };
 
+// Register user
 exports.register = async (req, res) => {
   try {
     const { email, password, role } = req.body;
@@ -86,6 +99,7 @@ exports.register = async (req, res) => {
   }
 };
 
+// Login user
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -119,10 +133,11 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: 'An error occurred during login' });
   }
 };
 
+// Forgot password (send reset email)
 exports.forgotPassword = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -136,9 +151,9 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_FRONTEND_URL}/reset-password/${resetToken}`;
 
-    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please click on the link to reset your password: \n\n ${resetUrl}`;
 
     try {
       await sendEmail({
@@ -158,10 +173,11 @@ exports.forgotPassword = async (req, res) => {
     }
   } catch (error) {
     console.error('Forgot password error:', error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'An error occurred' });
   }
 };
 
+// Reset password
 exports.resetPassword = async (req, res) => {
   try {
     const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
@@ -187,6 +203,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+// Verify email
 exports.verifyEmail = async (req, res) => {
   try {
     const user = await User.findOne({
@@ -210,6 +227,7 @@ exports.verifyEmail = async (req, res) => {
   }
 };
 
+// Resend verification email
 exports.resendVerification = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -252,4 +270,3 @@ exports.resendVerification = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-

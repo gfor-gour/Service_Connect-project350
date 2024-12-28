@@ -1,7 +1,7 @@
-"use client"; // Ensure this is a Client Component
+"use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Correct import for App Directory
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const Login = () => {
@@ -12,7 +12,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Now uses next/navigation
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/login`, // Corrected login URL
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/login`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -31,9 +31,15 @@ const Login = () => {
       );
 
       if (response.ok) {
+        const data = await response.json();
         setIsSuccess(true);
+        localStorage.setItem('token', data.token);
         setTimeout(() => {
-          router.push('/profile');
+          if (data.user.role === 'provider') {
+            router.push('/provider-profile');
+          } else {
+            router.push('/user-profile');
+          }
         }, 2000);
       } else {
         const data = await response.json();
@@ -50,7 +56,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/forgot-password`, // Corrected forgot-password URL
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/forgot-password`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -155,3 +161,4 @@ const Login = () => {
 };
 
 export default Login;
+
