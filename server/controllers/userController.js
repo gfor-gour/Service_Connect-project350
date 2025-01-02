@@ -1,4 +1,6 @@
+
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 // Get user profile
 exports.getProfile = async (req, res) => {
@@ -66,10 +68,37 @@ exports.getDashboard = async (req, res) => {
   }
 };
 
+// Get user details by userId (new method)
+// Get user details by userId
+exports.getUserDetails = async (req, res) => {
+  console.log("Request to fetch user details hit");
+
+  try {
+    const { userId } = req.params; // Extract userId from the request parameters
+
+    // Validate userId format (optional if using mongoose's ObjectId validation)
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid userId format' });
+    }
+
+    // Find the user by their userId, including the password field in the result
+    const user = await User.findById(userId);  // No exclusion of password here
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return the user details including password
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user details:', error.message);
+    res.status(500).json({ message: 'Error fetching user details' });
+  }
+};
 // Get all users (optional admin functionality)
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
