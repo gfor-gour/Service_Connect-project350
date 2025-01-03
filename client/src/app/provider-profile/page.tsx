@@ -145,11 +145,11 @@ const ProviderProfile = () => {
                 <img
                   src={profile.profilePicture || "/default-avatar.png"}
                   alt="Profile"
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover border-2 border-blue-600"
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover border-2 border-black"
                 />
                 <label
                   htmlFor="profilePicture"
-                  className="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full px-2 py-1 text-xs cursor-pointer"
+                  className="absolute bottom-0 right-0 bg-black text-white rounded-full px-2 py-1 text-xs cursor-pointer"
                 >
                   Change
                 </label>
@@ -174,7 +174,7 @@ const ProviderProfile = () => {
                     name="name"
                     value={profile.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-black rounded focus:outline-none focus:ring-2 focus:ring-black"
                   />
                 </div>
                 <div className="mb-4">
@@ -200,7 +200,7 @@ const ProviderProfile = () => {
                     name="address"
                     value={profile.address}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-black rounded focus:outline-none focus:ring-2 focus:ring-black"
                   />
                 </div>
                 <div className="mb-4">
@@ -212,7 +212,7 @@ const ProviderProfile = () => {
                     name="workType"
                     value={profile.workType}
                     onChange={(e) => setProfile({ ...profile, workType: e.target.value })}
-                    className="w-full px-4 py-2 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-black rounded focus:outline-none focus:ring-2 focus:ring-black"
                   >
                     <option value="" disabled>
                       Select work type
@@ -225,21 +225,15 @@ const ProviderProfile = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
                 >
                   Update Profile
                 </button>
                 <Link
                   href="/messenger"
-                  className="block w-full mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-center"
+                  className="block w-full mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black text-center"
                 >
                   Go to Messenger
-                </Link>
-                <Link
-                  href="/message-user"
-                  className="block w-full mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-center"
-                >
-                  Message User
                 </Link>
               </form>
             </div>

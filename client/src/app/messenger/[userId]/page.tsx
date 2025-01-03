@@ -40,4 +40,3 @@ export default function UserChat() {
 
   return <ChatWindow conversationId={conversationId} />
 }
-
