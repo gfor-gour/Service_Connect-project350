@@ -1,31 +1,33 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react"; // Importing icons
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
-  const [error, setError] = useState('');
+  const [resetEmail, setResetEmail] = useState("");
+  const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Password visibility state
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
     setIsSuccess(false);
 
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/login`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         }
       );
@@ -33,20 +35,20 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
         setIsSuccess(true);
-        localStorage.setItem('token', data.token);
+        localStorage.setItem("token", data.token);
         setTimeout(() => {
-          if (data.user.role === 'provider') {
-            router.push('/provider-profile');
+          if (data.user.role === "provider") {
+            router.push("/provider-profile");
           } else {
-            router.push('/user-profile');
+            router.push("/user-profile");
           }
         }, 2000);
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to log in');
+        setError(data.message || "Failed to log in");
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -58,19 +60,19 @@ const Login = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/forgot-password`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: resetEmail }),
         }
       );
 
       if (response.ok) {
-        alert('Check your email for reset instructions');
+        alert("Check your email for reset instructions");
       } else {
-        alert('Failed to send reset instructions');
+        alert("Failed to send reset instructions");
       }
     } catch (err) {
-      alert('An error occurred. Please try again later.');
+      alert("An error occurred. Please try again later.");
     }
   };
 
@@ -116,25 +118,32 @@ const Login = () => {
               />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700 pr-10"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
 
             <button
               type="submit"
               disabled={loading}
               className={`w-full p-3 rounded-md text-white bg-black ${
-                loading ? 'bg-gray-500 cursor-not-allowed' : 'hover:bg-gray-700'
+                loading ? "bg-gray-500 cursor-not-allowed" : "hover:bg-gray-700"
               }`}
             >
-              {loading ? 'Logging In...' : 'Login'}
+              {loading ? "Logging In..." : "Login"}
             </button>
             <p className="text-center mt-4">
               <button
@@ -149,7 +158,7 @@ const Login = () => {
 
         <div className="mt-4 text-center">
           <p className="text-sm">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <Link href="/signup" className="text-blue-500 hover:underline">
               Sign up here
             </Link>
@@ -161,4 +170,3 @@ const Login = () => {
 };
 
 export default Login;
-

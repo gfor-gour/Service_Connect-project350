@@ -33,6 +33,14 @@ const Navbar = () => {
         </li>
         <li>
           <Link
+            href="/chatbot"
+            className="text-black dark:text-white hover:underline"
+          >
+            Chatbot
+          </Link>
+        </li>
+        <li>
+          <Link
             href="/contact"
             className="text-black dark:text-white hover:underline"
           >
@@ -98,6 +106,15 @@ const Navbar = () => {
           </li>
           <li>
             <Link
+              href="/chatbot"
+              className="text-black dark:text-white hover:underline text-lg"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Chatbot
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/contact"
               className="text-black dark:text-white hover:underline text-lg"
               onClick={() => setIsMenuOpen(false)}
@@ -128,4 +145,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

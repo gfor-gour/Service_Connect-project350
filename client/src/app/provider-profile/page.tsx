@@ -124,12 +124,19 @@ const ProviderProfile = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
+      {/* Navbar */}
       <Navbar />
+
       <div className="flex-grow container mx-auto px-4 py-8">
         <div className="flex flex-col-reverse md:flex-row justify-between items-start gap-6">
           {/* Search Section */}
@@ -240,6 +247,17 @@ const ProviderProfile = () => {
           </div>
         </div>
       </div>
+
+      {/* Logout Button at Bottom */}
+      <div className="w-full text-center py-4">
+        <button
+          onClick={handleLogout}
+          className="px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
+          Logout
+        </button>
+      </div>
+
       <Footer />
     </div>
   );

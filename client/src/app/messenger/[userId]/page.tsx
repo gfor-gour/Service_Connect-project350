@@ -38,5 +38,11 @@ export default function UserChat() {
   if (error) return <div className="p-4 text-red-500">{error}</div>
   if (!conversationId) return <div className="p-4">No conversation found</div>
 
-  return <ChatWindow conversationId={conversationId} />
+  return (
+    <ChatWindow
+      conversationId={conversationId}
+      onBack={() => console.log('Back button clicked')} // Replace with actual navigation logic
+      currentUserId={typeof userId === 'string' ? userId : ''} // Ensure this is the correct current user ID
+    />
+  )
 }
