@@ -8,6 +8,8 @@ router.get('/', protect, conversationController.getConversations);
 
 router.get('/:userId', protect, conversationController.getOrCreateConversation);
 
+router.post('/:userId', protect, conversationController.getOrCreateConversation);
+
 router.get('/:conversationId/messages', protect, conversationController.getMessages);
 
 router.post('/:conversationId/messages', protect, conversationController.sendMessage);

@@ -22,17 +22,20 @@ interface ConversationListProps {
 export default function ConversationList({ onSelectConversation, selectedConversation }: ConversationListProps) {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchConversations = async () => {
       try {
         const token = localStorage.getItem('token')
+        if (!token) throw new Error('No token found')
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/conversations`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         })
+
         if (!response.ok) throw new Error('Failed to fetch conversations')
         const data = await response.json()
         setConversations(data)
@@ -66,9 +69,9 @@ export default function ConversationList({ onSelectConversation, selectedConvers
             <h3 className="font-semibold truncate">
               {conversation.participants[0].name}
             </h3>
-            <p className="text-sm text-gray-500 truncate">{conversation.lastMessage}</p>
+            <p className="text-sm text-gray-500 truncate">{conversation.lastMessage || "No messages yet"}</p>
             <p className="text-xs text-gray-400">
-              {new Date(conversation.updatedAt).toLocaleString()}
+              {conversation.updatedAt ? new Date(conversation.updatedAt).toLocaleString() : "Just now"}
             </p>
           </div>
         </div>
@@ -76,4 +79,3 @@ export default function ConversationList({ onSelectConversation, selectedConvers
     </div>
   )
 }
-

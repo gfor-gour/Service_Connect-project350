@@ -7,16 +7,10 @@ const User = require('../models/User');
 exports.protect = async (req, res, next) => {
   let token;
 
-  // Log incoming request headers to check if Authorization header is present
-  console.log('Incoming Request Headers:', req.headers);
-
   // Check if the token is passed via Authorization header
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1]; // Extract token from 'Bearer <token>'
   }
-
-  // Log the extracted token
-  console.log('Extracted Token:', token);
 
   // If no token is found, return an error
   if (!token) {
@@ -27,11 +21,8 @@ exports.protect = async (req, res, next) => {
     // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Log the decoded token information
-    console.log('Decoded Token:', decoded);
-
+    // Check if the user exists in the database
     const user = await User.findById(decoded.id);
-
     if (!user) {
       return res.status(401).json({ message: 'User does not exist. Authorization denied.' });
     }
@@ -126,14 +117,10 @@ exports.getMessages = async (req, res) => {
 };
 
 // Send a message in a specific conversation
-// Send a message in a specific conversation
 exports.sendMessage = async (req, res) => {
   try {
     const { conversationId } = req.params;
     const { content } = req.body;
-
-    // Log the received content
-    console.log('Received message content:', content);
 
     // Validate if content is provided
     if (!content || content.trim().length === 0) {
@@ -154,16 +141,10 @@ exports.sendMessage = async (req, res) => {
     });
     await newMessage.save();
 
-    // Log the saved message
-    console.log('Saved message:', newMessage);
-
     // Update the conversation's last message and timestamp
-    conversation.lastMessage = content; // Set the lastMessage to the current content
-    conversation.updatedAt = new Date(); // Set the updated timestamp
-    await conversation.save(); // Save the updated conversation
-
-    // Log the updated conversation
-    console.log('Updated conversation:', conversation);
+    conversation.lastMessage = content;
+    conversation.updatedAt = new Date();
+    await conversation.save();
 
     // Populate sender details in the message
     const populatedMessage = await newMessage.populate('sender', 'name email');

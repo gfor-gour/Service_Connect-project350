@@ -6,7 +6,8 @@ import ChatWindow from "./ChatWindow"
 
 export default function Messenger() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
-  const currentUserId = "user123"
+  const currentUserEmail = typeof window !== "undefined" ? localStorage.getItem("email") || "" : ""
+  console.log('Current user email:', currentUserEmail)
 
   const handleSelectConversation = (conversationId: string) => {
     setSelectedConversation(conversationId)
@@ -39,7 +40,7 @@ export default function Messenger() {
           <ChatWindow
             conversationId={selectedConversation}
             onBack={handleBack}
-            currentUserId={currentUserId}
+            currentUserEmail={currentUserEmail}
           />
         ) : (
           <div className="h-full flex items-center justify-center text-gray-500 bg-white">
@@ -53,4 +54,3 @@ export default function Messenger() {
     </div>
   )
 }
-
