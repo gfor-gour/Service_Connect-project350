@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 
 interface Provider {
   name: string;
@@ -16,15 +16,14 @@ const BookingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const router = useRouter();
-  const { userId } = router.query; // Get userId from the dynamic route
+  const params = useParams(); // Correct way to get dynamic route params
+  const userId = params?.userId as string; // Ensure it's a string
 
   useEffect(() => {
     if (!userId) return;
 
     const fetchProvider = async () => {
       try {
-        // Fetch provider details from the backend
         const response = await fetch(`/api/users/${userId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch provider data");
@@ -32,8 +31,7 @@ const BookingPage = () => {
         const data = await response.json();
         setProvider(data);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-        setError(errorMessage);
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -44,7 +42,6 @@ const BookingPage = () => {
 
   const handleBooking = async () => {
     try {
-      // Example booking logic (replace with actual implementation)
       const response = await fetch(`/api/bookings`, {
         method: "POST",
         headers: {
@@ -52,7 +49,7 @@ const BookingPage = () => {
         },
         body: JSON.stringify({
           providerId: userId,
-          clientId: "currentUserId", // Replace with the actual logged-in user's ID
+          clientId: "currentUserId", // Replace with actual logged-in user ID
         }),
       });
 
@@ -62,8 +59,7 @@ const BookingPage = () => {
 
       alert("Booking successful!");
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-      alert(`Booking failed: ${errorMessage}`);
+      alert(`Booking failed: ${err instanceof Error ? err.message : "An unknown error occurred"}`);
     }
   };
 

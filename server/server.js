@@ -49,6 +49,7 @@ const userRoutes = require('./routes/userRoutes');
 const conversationRoutes = require('./routes/conversationRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const generateRoutes = require('./routes/generateRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 // Define routes
 app.use('/api/auth', authRoutes);
@@ -56,6 +57,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use("/api/generate", generateRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Socket.IO events
 io.on('connection', (socket) => {

@@ -56,7 +56,7 @@ export default function Search({ onSelectUser }: SearchProps) {
     }
   
   const handleBookClick = (userId: string) => {
-    router.push(`/book/${userId}`)
+    router.push(`/booking/${userId}`)
   }
 
   return (
