@@ -1,8 +1,15 @@
-const express = require('express');
+// routes/bookingRoutes.js
+const express = require("express");
+const { createBooking, handleBookingResponse, getBookingStatus } = require("../controllers/bookingController");
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
-const { protect } = require('../middleware/auth');
 
-router.post('/', protect, bookingController.createBooking);
+// Create a Booking Request
+router.post("/book", createBooking);
+
+// Handle Accept/Reject from Provider
+router.get("/respond", handleBookingResponse);
+
+// Get Booking Status for User
+router.get("/status/:userId", getBookingStatus);
 
 module.exports = router;
