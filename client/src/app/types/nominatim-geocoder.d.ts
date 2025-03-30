@@ -1,0 +1,26 @@
+declare module 'nominatim-geocoder' {
+    interface GeocoderResult {
+      lat: string;
+      lon: string;
+      display_name?: string;
+      boundingbox?: [string, string, string, string];
+      [key: string]: any;
+    }
+  
+    interface SearchOptions {
+      q: string;
+      format?: 'json';
+      limit?: number;
+      addressdetails?: boolean;
+      countrycodes?: string;
+      [key: string]: any;
+    }
+  
+    class Geocoder {
+      constructor();
+      search(options: SearchOptions): Promise<GeocoderResult[]>;
+    }
+  
+    export default Geocoder;
+  }
+  

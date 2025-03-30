@@ -12,7 +12,8 @@ exports.searchUsers = async (req, res) => {
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { email: { $regex: query, $options: 'i' } },
-        { workType: { $regex: query, $options: 'i' } }
+        { workType: { $regex: query, $options: 'i' } },
+        { address: { $regex: query, $options: 'i' } }  // ✅ Added address field to search
       ]
     }).select('-password');
 

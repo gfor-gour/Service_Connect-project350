@@ -1,32 +1,34 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useDebounce } from 'use-debounce'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react';
+import { useDebounce } from 'use-debounce';
+import { useRouter } from 'next/navigation';
+import MapComponent from './MapComponent';
 
 interface User {
-  _id: string
-  name: string
-  email: string
-  role: string
-  workType?: string
-  profilePicture?: string
-  address: string
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  workType?: string;
+  profilePicture?: string;
+  address: string;
 }
 
 interface SearchProps {
-  onSelectUser?: (userId: string) => void
+  onSelectUser?: (userId: string) => void;
 }
 
 export default function Search({ onSelectUser }: SearchProps) {
-  const [query, setQuery] = useState('')
-  const [debouncedQuery] = useDebounce(query, 300)
-  const [results, setResults] = useState<User[]>([])
-  const router = useRouter()
+  const [query, setQuery] = useState('');
+  const [debouncedQuery] = useDebounce(query, 300);
+  const [results, setResults] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const router = useRouter();
 
   const searchUsers = async (searchQuery: string) => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/search?query=${encodeURIComponent(searchQuery)}`,
         {
@@ -34,33 +36,38 @@ export default function Search({ onSelectUser }: SearchProps) {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      if (!response.ok) throw new Error('Search failed')
-      const data = await response.json()
-      setResults(data)
+      );
+      if (!response.ok) throw new Error('Search failed');
+      const data = await response.json();
+      setResults(data);
     } catch (error) {
-      console.error('Search error:', error)
+      console.error('Search error:', error);
     }
-  }
+  };
 
   useEffect(() => {
     if (debouncedQuery) {
-      searchUsers(debouncedQuery)
+      searchUsers(debouncedQuery);
     } else {
-      setResults([])
+      setResults([]);
     }
-  }, [debouncedQuery])
+  }, [debouncedQuery]);
+
+  const handleUserClick = (user: User) => {
+    setSelectedUser(user);
+  };
 
   const handleMessageClick = (userId: string) => {
-     router.push(`/messenger/${userId}`)
-    }
-  
+    router.push(`/messenger/${userId}`);
+  };
+
   const handleBookClick = (userId: string) => {
-    router.push(`/booking/${userId}`)
-  }
+    router.push(`/booking/${userId}`);
+  };
 
   return (
     <div className="w-full max-w-md mx-auto">
+      {/* Search Input */}
       <input
         type="text"
         placeholder="Search by name, email, or work type..."
@@ -68,11 +75,16 @@ export default function Search({ onSelectUser }: SearchProps) {
         onChange={(e) => setQuery(e.target.value)}
         className="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+
+      {/* Search Results */}
       <div className="space-y-2">
         {results.map((user) => (
           <div
             key={user._id}
-            className="p-4 border border-gray-200 rounded shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-50"
+            className={`p-4 border border-gray-200 rounded shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-50 ${
+              selectedUser?._id === user._id ? 'bg-gray-100' : ''
+            }`}
+            onClick={() => handleUserClick(user)}
           >
             <div className="flex items-center">
               <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mr-4">
@@ -118,6 +130,14 @@ export default function Search({ onSelectUser }: SearchProps) {
           </div>
         ))}
       </div>
+
+      {/* Map Component (Shows only if a user is selected) */}
+      {selectedUser && (
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold mb-2">Location of {selectedUser.name}</h3>
+          <MapComponent address={selectedUser.address} />
+        </div>
+      )}
     </div>
-  )
+  );
 }
