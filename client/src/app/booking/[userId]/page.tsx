@@ -19,20 +19,23 @@ interface Booking {
   status: string;
   price?: number;
   createdAt: string;
+  paymentStatus: string;
 }
 
 export default function BookingPage() {
-  const { userId } = useParams(); 
+  const { userId } = useParams();
   const [provider, setProvider] = useState<Provider | null>(null);
   const [description, setDescription] = useState("");
   const [bookingStatus, setBookingStatus] = useState<string>("Pending");
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [bookingHistory, setBookingHistory] = useState<Booking[]>([]);
+  const [userDetails, setUserDetails] = useState<any>(null); // To store user details (name, address, etc.)
 
   useEffect(() => {
     fetchProviderDetails();
     fetchBookingHistory();
+    fetchUserDetails();
   }, []);
 
   const fetchProviderDetails = async () => {
@@ -73,6 +76,26 @@ export default function BookingPage() {
       setBookingHistory(data);
     } catch (error) {
       console.error("Error fetching booking history:", error);
+    }
+  };
+
+  const fetchUserDetails = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const currentUserId = localStorage.getItem("userId");
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${currentUserId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch user details");
+      const data = await response.json();
+      setUserDetails(data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
     }
   };
 
@@ -117,10 +140,50 @@ export default function BookingPage() {
     }
   };
 
-  const handlePayment = (booking: Booking) => {
-    alert(`Proceeding to pay ${booking.price} BDT for Booking ID: ${booking._id}`);
-    // Implement Payment Gateway logic here (SSLCommerz, Stripe, etc.)
+  const handlePayment = async (booking: Booking) => {
+    try {
+      if (booking.paymentStatus === "success") {
+        alert("Payment already successful for this booking.");
+        return;
+      }
+  
+      const token = localStorage.getItem("token");
+      const currentUserId = localStorage.getItem("userId");
+  
+      // Initialize payment by calling the payment gateway API
+      const paymentData = {
+        userId: currentUserId,
+        price: booking.price,
+        address: userDetails?.address, // User address from user history
+        name: userDetails?.name, // User name from user history
+        bookingId: booking._id,
+      };
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/transactions/sslcommerz/init`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(paymentData),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to initiate payment");
+  
+      // Check if the response contains a redirect URL
+      if (data.url) {
+        // Redirect the user to the payment gateway
+        window.location.href = data.url;
+      } else {
+        alert("Payment initiation failed. No redirect URL received.");
+      }
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      alert("Failed to initiate payment!");
+    }
   };
+  
 
   const handleCashOnDelivery = (booking: Booking) => {
     alert(`Cash on Delivery selected for Booking ID: ${booking._id}`);
@@ -173,9 +236,10 @@ export default function BookingPage() {
                   <p><strong>Description:</strong> {booking.description}</p>
                   {booking.price && <p><strong>Price:</strong> {booking.price} BDT</p>}
                   <p className="text-sm text-gray-500">{new Date(booking.createdAt).toLocaleString()}</p>
+                  <p className="text-sm text-gray-500">Payment Status: {booking.paymentStatus}</p>
 
-                  {/* Show Payment Options if Status is Accepted */}
-                  {booking.status === "accepted" && booking.price && (
+                  {/* Show Payment Options if Status is Accepted and Payment not successful */}
+                  {booking.status === "accepted" && booking.paymentStatus !== "success" && booking.price && (
                     <div className="mt-2 flex space-x-3">
                       <button
                         onClick={() => handleCashOnDelivery(booking)}
@@ -185,6 +249,7 @@ export default function BookingPage() {
                       </button>
                       <button
                         onClick={() => handlePayment(booking)}
+                        disabled={booking.paymentStatus === "success"}
                         className="bg-green-500 text-white px-3 py-1 rounded"
                       >
                         Pay {booking.price} BDT

@@ -25,6 +25,11 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     required: false
   },
+  paymentStatus: {
+    type: String,
+    enum: ["pending", "success", "failed"], // Adding the payment status
+    default: "pending", // Default status is pending until payment is completed
+  },
   createdAt: {
     type: Date,
     default: Date.now
