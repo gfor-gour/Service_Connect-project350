@@ -98,14 +98,34 @@ exports.handleBookingResponse = async (req, res) => {
 
 // Get Booking Status for User
 exports.getBookingStatus = async (req, res) => {
-  const { userId } = req.params;
+  const { bookingId } = req.params; // URL থেকে bookingId নেওয়া হচ্ছে
+
   try {
-    const bookings = await Booking.find({
-      $or: [{ userId: userId }, { providerId: userId }]
-    }).populate("userId providerId");
+    const booking = await Booking.findById(bookingId).populate("userId providerId");
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json(booking); // বুকিং তথ্য পাঠানো হচ্ছে
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getUserBookings = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const bookings = await Booking.find({ userId }).populate("providerId", "name email");
+
+    if (!bookings.length) {
+      return res.status(404).json({ message: "No bookings found" });
+    }
 
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+

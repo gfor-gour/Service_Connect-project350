@@ -1,207 +1,198 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
-interface User {
+interface Provider {
   _id: string;
   name: string;
   email: string;
-  role: string;
   workType?: string;
   profilePicture?: string;
   address: string;
 }
 
-export default function BookingPage() {
-  const router = useRouter();
-  const { userId } = useParams(); // Get the userId from the URL
-  const [user, setUser] = useState<User | null>(null);
-  const [isBooking, setIsBooking] = useState(false); // Track whether the user is booking
-  const [description, setDescription] = useState('');
-  const [statusMessage, setStatusMessage] = useState('');
-  const [bookingStatus, setBookingStatus] = useState<string>('pending'); // Track booking status
-  const loggedInUserId = localStorage.getItem('userId'); 
-  console.log('Logged In User ID:', loggedInUserId);
-  useEffect(() => {
-    if (userId) {
-      // Fetch the provider's details and booking status
-      fetchUserDetails(userId as string);
-    }
-  }, [userId]);
+interface Booking {
+  _id: string;
+  providerId: Provider;
+  description: string;
+  status: string;
+  price?: number;
+  createdAt: string;
+}
 
-  const fetchUserDetails = async (userId: string) => {
+export default function BookingPage() {
+  const { userId } = useParams(); 
+  const [provider, setProvider] = useState<Provider | null>(null);
+  const [description, setDescription] = useState("");
+  const [bookingStatus, setBookingStatus] = useState<string>("Pending");
+  const [bookingId, setBookingId] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [bookingHistory, setBookingHistory] = useState<Booking[]>([]);
+
+  useEffect(() => {
+    fetchProviderDetails();
+    fetchBookingHistory();
+  }, []);
+
+  const fetchProviderDetails = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${userId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!response.ok) throw new Error('Failed to fetch user details');
+
+      if (!response.ok) throw new Error("Failed to fetch provider details");
       const data = await response.json();
-      setUser(data);
-      console.log('User ID:', data._id);
-      console.log('User Details:', data);
-      // Fetch the current booking status
-      fetchBookingStatus(userId);
+      setProvider(data);
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error("Error fetching provider details:", error);
     }
   };
 
-  const fetchBookingStatus = async (userId: string) => {
+  const fetchBookingHistory = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
+      const currentUserId = localStorage.getItem("userId");
+
+      if (!currentUserId) return;
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/booking/status/${userId}`,
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/bookings/user/${currentUserId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!response.ok) throw new Error('Failed to fetch booking status');
+
+      if (!response.ok) throw new Error("Failed to fetch booking history");
+
       const data = await response.json();
-      setBookingStatus(data.status); // The status can be 'pending', 'accepted', or 'rejected'
+      setBookingHistory(data);
     } catch (error) {
-      console.error('Error fetching booking status:', error);
+      console.error("Error fetching booking history:", error);
     }
   };
 
-  const handleBooking = async () => {
-    setIsBooking(true);
-    setStatusMessage('Booking request is being processed...');
-    // Send booking request to the backend with description
+  const handleBookingRequest = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/booking/request`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            providerId: user?._id,
-            description,
-          }),
-        }
-      );
-      if (!response.ok) throw new Error('Booking request failed');
-      // Handle response from booking API (e.g., success message or redirection)
-      setStatusMessage('Booking request sent successfully! Please wait for confirmation.');
+      if (isProcessing) return;
+      const token = localStorage.getItem("token");
+      const currentUserId = localStorage.getItem("userId");
+
+      if (!provider || !currentUserId || !description.trim()) {
+        alert("Please provide all details before booking!");
+        return;
+      }
+
+      setIsProcessing(true);
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/bookings/book`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: currentUserId,
+          providerId: provider._id,
+          description,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to send booking request");
+
+      alert("Booking request sent successfully!");
+      setBookingHistory((prev) => [...prev, data.booking]); // Update booking history
+      setBookingStatus("Booked");
+      setBookingId(data.booking._id);
     } catch (error) {
-      console.error('Booking error:', error);
-      setStatusMessage('Failed to send booking request. Please try again.');
+      console.error("Error sending booking request:", error);
+      alert("Failed to send booking request!");
+    } finally {
+      setIsProcessing(false);
     }
+  };
+
+  const handlePayment = (booking: Booking) => {
+    alert(`Proceeding to pay ${booking.price} BDT for Booking ID: ${booking._id}`);
+    // Implement Payment Gateway logic here (SSLCommerz, Stripe, etc.)
+  };
+
+  const handleCashOnDelivery = (booking: Booking) => {
+    alert(`Cash on Delivery selected for Booking ID: ${booking._id}`);
+    // Implement COD logic, update status if needed
   };
 
   return (
     <div className="w-full max-w-lg mx-auto p-4">
-      {user ? (
+      {provider ? (
         <div>
-          {/* Display provider information */}
-          <h2 className="text-2xl font-semibold mb-4">Booking Appointment with {user.name}</h2>
+          <h2 className="text-2xl font-semibold mb-4">Book Provider</h2>
           <div className="flex items-center mb-6">
             <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mr-4">
-              {user.profilePicture ? (
-                <img
-                  src={user.profilePicture}
-                  alt={user.name}
-                  className="h-full w-full object-cover"
-                />
+              {provider.profilePicture ? (
+                <img src={provider.profilePicture} alt={provider.name} className="h-full w-full object-cover" />
               ) : (
-                <span className="text-gray-500 text-2xl font-semibold">
-                  {user.name.charAt(0)}
-                </span>
+                <span className="text-gray-500 text-2xl font-semibold">{provider.name.charAt(0)}</span>
               )}
             </div>
             <div>
-              <h3 className="font-semibold text-xl">{user.name}</h3>
-              <p className="text-gray-600">{user.email}</p>
-              {user.workType && <p className="text-sm text-blue-500">{user.workType}</p>}
+              <h3 className="font-semibold text-xl">{provider.name}</h3>
+              <p className="text-gray-600">{provider.email}</p>
+              {provider.workType && <p className="text-sm text-blue-500">{provider.workType}</p>}
             </div>
           </div>
 
-          {/* Booking Description */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-lg">Description:</h3>
-            <textarea
-              className="w-full p-2 mt-2 border border-gray-300 rounded"
-              placeholder="Describe your booking request"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full border p-2 rounded mb-4"
+            placeholder="Enter booking details..."
+          />
 
-          {/* Status Message */}
-          {statusMessage && (
-            <div className="mb-4 text-sm text-gray-700">
-              <p>{statusMessage}</p>
-            </div>
-          )}
+          <button
+            onClick={handleBookingRequest}
+            disabled={bookingStatus === "Booked" || isProcessing}
+            className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+          >
+            {isProcessing ? "Processing..." : bookingStatus === "Booked" ? "Already Booked" : "Book Now"}
+          </button>
 
-          {/* Booking Status */}
-          <div className="mt-6">
-            {bookingStatus === 'pending' && (
-              <p className="text-yellow-600">Your booking request is pending approval.</p>
-            )}
-            {bookingStatus === 'accepted' && (
-              <div>
-                <p className="text-green-600">Provider has accepted your booking!</p>
-                <div className="flex space-x-4 mt-4">
-                  <button
-                    className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    onClick={() => alert('Proceeding with payment')}
-                  >
-                    Pay Now
-                  </button>
-                  <button
-                    className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={() => alert('Cash on delivery option selected')}
-                  >
-                    Cash on Delivery
-                  </button>
+          {/* Booking History */}
+          {bookingHistory.length > 0 && (
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold mb-3">Booking History</h2>
+              {bookingHistory.map((booking) => (
+                <div key={booking._id} className="border p-3 mb-2 rounded bg-gray-50">
+                  <p><strong>Provider:</strong> {booking.providerId.name}</p>
+                  <p><strong>Status:</strong> {booking.status}</p>
+                  <p><strong>Description:</strong> {booking.description}</p>
+                  {booking.price && <p><strong>Price:</strong> {booking.price} BDT</p>}
+                  <p className="text-sm text-gray-500">{new Date(booking.createdAt).toLocaleString()}</p>
+
+                  {/* Show Payment Options if Status is Accepted */}
+                  {booking.status === "accepted" && booking.price && (
+                    <div className="mt-2 flex space-x-3">
+                      <button
+                        onClick={() => handleCashOnDelivery(booking)}
+                        className="bg-gray-600 text-white px-3 py-1 rounded"
+                      >
+                        Cash on Delivery
+                      </button>
+                      <button
+                        onClick={() => handlePayment(booking)}
+                        className="bg-green-500 text-white px-3 py-1 rounded"
+                      >
+                        Pay {booking.price} BDT
+                      </button>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-            {bookingStatus === 'rejected' && (
-              <p className="text-red-600">Provider has rejected your booking.</p>
-            )}
-          </div>
-
-          {/* Booking Options */}
-          {isBooking ? (
-            <div className="mt-4 p-4 bg-gray-100 rounded">
-              <h4 className="text-xl font-semibold">Booking in Progress</h4>
-              <div className="flex space-x-4 mt-4">
-                <button
-                  className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                  onClick={() => alert('Proceeding with payment')}
-                >
-                  Pay Now
-                </button>
-                <button
-                  className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  onClick={() => alert('Cash on delivery option selected')}
-                >
-                  Cash on Delivery
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-4">
-              <button
-                className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                onClick={handleBooking}
-              >
-                Confirm Booking
-              </button>
+              ))}
             </div>
           )}
         </div>
