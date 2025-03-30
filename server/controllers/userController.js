@@ -68,31 +68,27 @@ exports.getDashboard = async (req, res) => {
   }
 };
 
-// Get user details by userId (new method)
 // Get user details by userId
 exports.getUserDetails = async (req, res) => {
   console.log("Request to fetch user details hit");
 
   try {
-    const { userId } = req.params; // Extract userId from the request parameters
+    const { userId } = req.params;
 
-    // Validate userId format (optional if using mongoose's ObjectId validation)
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: 'Invalid userId format' });
+    // Validate userId
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
     }
 
-    // Find the user by their userId, including the password field in the result
-    const user = await User.findById(userId);  // No exclusion of password here
-
+    const user = await User.findById(userId); // Replace with your database logic
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return the user details including password
     res.status(200).json(user);
   } catch (error) {
     console.error('Error fetching user details:', error.message);
-    res.status(500).json({ message: 'Error fetching user details' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 // Get all users (optional admin functionality)

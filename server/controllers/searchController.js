@@ -3,6 +3,7 @@ const User = require('../models/User');
 exports.searchUsers = async (req, res) => {
   try {
     const { query } = req.query;
+    console.log('Search query:', query); // Debug query
     if (!query) {
       return res.status(400).json({ message: 'Search query is required' });
     }
@@ -15,6 +16,7 @@ exports.searchUsers = async (req, res) => {
       ]
     }).select('-password');
 
+    console.log('Found users:', users); // Debug fetched users
     res.status(200).json(users);
   } catch (error) {
     console.error('Search error:', error);

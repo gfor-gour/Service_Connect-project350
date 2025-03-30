@@ -8,16 +8,27 @@ exports.protect = async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
+  console.log('Token received in middleware:', token); // Debug token
+
   if (!token) {
     return res.status(401).json({ message: 'Not authorized to access this route' });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
+    console.log('Decoded token:', decoded); // Debug decoded token
+
+    req.user = await User.findById(decoded.id).select('-password');
+    console.log('Authenticated user:', req.user); // Debug authenticated user
+
+    if (!req.user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Not authorized to access this route' });
+    console.error('Authorization error:', error.message); // Debug error
+    res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 

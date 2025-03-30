@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
+import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Use next/navigation for navigation
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -12,11 +12,68 @@ const services = [
   { name: "Home Cleaners", image: "/cleaner.jpeg", category: "cleaner" },
 ];
 
-function ServicesPage() {
-  const router = useRouter();
+interface Provider {
+  id: string;
+  name: string;
+  workType: string;
+  rating: number;
+  description: string;
+}
 
-  const handleViewProviders = (category: string) => {
-    router.push(`/providers?category=${category}`);
+function ServicesPage() {
+  const router = useRouter(); // Initialize the router
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchProviders = async (category: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log('Fetching providers for category:', category); // Debug category
+      const token = localStorage.getItem("token");
+      console.log('Token:', token); // Debug token
+  
+      const response = await fetch(
+        `http://localhost:5000/api/search?query=${category}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log('Response status:', response.status); // Debug response status
+      if (!response.ok) {
+        const errorText = await response.text(); // Get error details
+      console.error('Error response:', errorText); // Debug error response
+      throw new Error("Failed to fetch providers");
+      }
+  
+      const data = await response.json();
+      console.log('Fetched providers:', data); // Debug fetched data
+      setProviders(data);
+      setSelectedCategory(category);
+      setIsModalOpen(true); // Open the modal
+    } catch (err) {
+      console.error('Error fetching providers:', err); // Debug error
+      setError(err instanceof Error ? err.message : "An unknown error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setProviders([]);
+    setSelectedCategory(null);
+  };
+
+  const handleBookNow = (providerId: string) => {
+    // Navigate to the booking page with the provider's userId
+    router.push(`/booking/${providerId}`);
   };
 
   return (
@@ -42,7 +99,7 @@ function ServicesPage() {
                 key={index}
                 className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md"
               >
-                {/* Image Container with Hover Effect */}
+                {/* Image Container */}
                 <div className="relative group">
                   <img
                     src={service.image}
@@ -58,7 +115,7 @@ function ServicesPage() {
                 {/* Button Section */}
                 <div className="p-4 text-center">
                   <button
-                    onClick={() => handleViewProviders(service.category)}
+                    onClick={() => fetchProviders(service.category)}
                     className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
                   >
                     View Providers
@@ -69,6 +126,54 @@ function ServicesPage() {
           </div>
         </section>
       </main>
+
+      {/* Modal for Providers */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-3xl w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">
+                {selectedCategory
+                  ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Providers`
+                  : "Providers"}
+              </h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                ✕
+              </button>
+            </div>
+            {loading ? (
+              <p className="text-center">Loading...</p>
+            ) : error ? (
+              <p className="text-center text-red-500">{error}</p>
+            ) : (
+              <div className="space-y-4">
+                {providers.map((provider) => (
+                  <div
+                    key={provider.id} // Add a unique key here
+                    className="p-4 border border-gray-200 rounded shadow-sm flex justify-between items-center"
+                  >
+                    <div>
+                      <h3 className="font-semibold">{provider.name}</h3>
+                      <p className="text-sm text-gray-500">{provider.workType}</p>
+                      <p className="text-sm text-gray-500">Rating: {provider.rating || "N/A"} ⭐</p>
+                      <p className="text-sm text-gray-500">{provider.description || "No description available"}</p>
+                    </div>
+                    <button
+                      onClick={() => handleBookNow(provider.id)} // Navigate to booking page
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Book Now
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>

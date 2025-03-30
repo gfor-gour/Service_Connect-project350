@@ -9,6 +9,6 @@ router.put('/profile', protect, userController.updateProfile); // Update the pro
 router.get('/dashboard', protect, authorize('provider'), userController.getDashboard); // Access dashboard if user is a provider
 
 // New route to get user details by userId (non-authenticated or different user)
-router.get('/:userId', userController.getUserDetails); // Get user details by userId
+router.get('/:userId',protect, userController.getUserDetails); // Get user details by userId
 
 module.exports = router;
