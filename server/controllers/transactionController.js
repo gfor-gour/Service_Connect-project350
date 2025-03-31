@@ -9,7 +9,6 @@ dotenv.config();
 const store_id = process.env.NEXT_PUBLIC_SSL_STORE_ID;
 const store_passwd = process.env.NEXT_PUBLIC_SSL_STORE_PASSWORD;
 const is_live = false; // Change to true in production
-
 // Initialize Transaction
 exports.initTransaction = async (req, res) => {
   try {
@@ -30,10 +29,12 @@ exports.initTransaction = async (req, res) => {
     }
 
     // Find booking
-    const booking = await Booking.findById(bookingId);
+    const booking = await Booking.findById(bookingId).populate("providerId");
     if (!booking) {
       return res.status(404).json({ success: false, message: "Booking not found" });
     }
+
+    const providerEmail = booking.providerId.email; // Get provider email
 
     // Create transaction
     const transaction = new Transaction({
@@ -61,6 +62,7 @@ exports.initTransaction = async (req, res) => {
       cus_add1: user.address || "Dhaka",
       cus_city: "Dhaka",
       cus_country: "Bangladesh",
+      provider_email: providerEmail, // Send provider email
       product_name: "Service Payment",
       product_category: "Services",
       product_profile: "general",
@@ -71,7 +73,7 @@ exports.initTransaction = async (req, res) => {
     const apiResponse = await sslcz.init(data);
 
     if (apiResponse && apiResponse.GatewayPageURL) {
-      res.json({ success: true, url: apiResponse.GatewayPageURL });
+      res.json({ success: true, url: apiResponse.GatewayPageURL, providerEmail });
     } else {
       res.status(500).json({ success: false, message: "SSLCommerz initialization failed" });
     }
@@ -80,6 +82,20 @@ exports.initTransaction = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
+const nodemailer = require("nodemailer");
+
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.SMTP_EMAIL,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
 
 // Handle Successful Payment
 exports.successTransaction = async (req, res) => {
@@ -95,10 +111,28 @@ exports.successTransaction = async (req, res) => {
     await transaction.save();
 
     // Update booking payment status to Paid
-    const booking = await Booking.findById(transaction.bookingId);
+    const booking = await Booking.findById(transaction.bookingId).populate("providerId");
     if (booking) {
       booking.paymentStatus = "success";
       await booking.save();
+    }
+
+    // Send Email Notification to Provider
+    if (booking.providerId.email) {
+      const mailOptions = {
+        from: process.env.SMTP_EMAIL,
+        to: booking.providerId.email,
+        subject: "New Payment Received",
+        text: `Dear ${booking.providerId.name},\n\nA payment of BDT ${transaction.price} has been received for your service.\n\nBest regards,\nYour Company`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email sending failed:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
     }
 
     res.redirect(`${process.env.NEXT_PUBLIC_APP_FRONTEND_URL}/payment-success`);
@@ -107,6 +141,7 @@ exports.successTransaction = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
 // Handle Failed Payment
 exports.failTransaction = async (req, res) => {

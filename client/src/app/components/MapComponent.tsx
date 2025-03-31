@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { getCoordinates } from '../utils/geolocation';
 
-// Dynamically import `react-leaflet` components to avoid Next.js SSR issues
+// Dynamically import react-leaflet components to avoid Next.js SSR issues
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
@@ -28,6 +28,7 @@ interface MapProps {
 
 const MapComponent = ({ address }: MapProps) => {
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -35,6 +36,8 @@ const MapComponent = ({ address }: MapProps) => {
         const coords = await getCoordinates(address);
         if (coords) {
           setCoordinates({ lat: coords.latitude, lng: coords.longitude });
+        } else {
+          console.error('No coordinates found for address:', address);
         }
       } catch (error) {
         console.error('Error fetching coordinates:', error);
@@ -46,10 +49,22 @@ const MapComponent = ({ address }: MapProps) => {
     }
   }, [address]);
 
+  const handleMapCreated = (mapInstance: L.Map) => {
+    mapRef.current = mapInstance;
+    console.log('Map instance:', mapInstance);
+  };
+
   return (
     <div className="w-full h-64">
-      {coordinates ? (
-        <MapContainer center={coordinates} zoom={15} style={{ height: '100%', width: '100%' }}>
+      {!coordinates ? (
+        <p className="text-center text-gray-500">Loading map...</p>
+      ) : (
+        <MapContainer
+          center={coordinates}
+          zoom={15}
+          style={{ height: '100%', width: '100%' }}
+          whenCreated={handleMapCreated} // Correct usage of whenCreated event
+        >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -58,8 +73,6 @@ const MapComponent = ({ address }: MapProps) => {
             <Popup>{address}</Popup>
           </Marker>
         </MapContainer>
-      ) : (
-        <p className="text-center text-gray-500">Loading map...</p>
       )}
     </div>
   );
