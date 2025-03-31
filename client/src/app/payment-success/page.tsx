@@ -16,20 +16,35 @@ interface Transaction {
 
 const PaymentSuccess = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [loading, setLoading] = useState(true); // Track loading state
   const searchParams = useSearchParams();
   const tran_id = searchParams.get("tran_id");
 
   useEffect(() => {
-    if (tran_id) {
-      fetch(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/transactions/${tran_id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setTransaction(data.transaction);
-          }
-        })
-        .catch((err) => console.error("Fetch error:", err));
+    if (!tran_id) {
+      console.error("Transaction ID not found in URL.");
+      setLoading(false);
+      return;
     }
+
+    const apiUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/transactions/transaction/${tran_id}`;
+    console.log("Fetching transaction from:", apiUrl);
+
+    fetch(apiUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("API Response:", data);
+        if (data.success && data.transaction) {
+          setTransaction(data.transaction);
+        } else {
+          console.error("Invalid API response:", data);
+        }
+      })
+      .catch((err) => console.error("Fetch error:", err))
+      .finally(() => setLoading(false)); // Stop loading after fetch
   }, [tran_id]);
 
   const downloadPDF = () => {
@@ -38,7 +53,7 @@ const PaymentSuccess = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text("Payment Receipt", 80, 20);
-    
+
     autoTable(doc, {
       startY: 30,
       head: [["Field", "Details"]],
@@ -54,8 +69,16 @@ const PaymentSuccess = () => {
     doc.save(`payment_receipt_${transaction._id}.pdf`);
   };
 
-  if (!transaction) {
+  if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  if (!transaction) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">Transaction not found.</p>
+      </div>
+    );
   }
 
   return (
@@ -63,7 +86,7 @@ const PaymentSuccess = () => {
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-green-600">Payment Successful</h2>
         <p className="mt-2 text-gray-600">Thank you for your payment!</p>
-        
+
         <div className="mt-4 border-t pt-4">
           <p><strong>Transaction ID:</strong> {transaction._id}</p>
           <p><strong>Name:</strong> {transaction.name}</p>
