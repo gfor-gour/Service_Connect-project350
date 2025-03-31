@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -16,18 +16,17 @@ interface Transaction {
 
 const PaymentSuccess = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
-  const [loading, setLoading] = useState(true); // Track loading state
-  const searchParams = useSearchParams();
-  const tran_id = searchParams.get("tran_id");
+  const [loading, setLoading] = useState(true);
+  const { transactionid } = useParams(); // Get the dynamic transaction ID
 
   useEffect(() => {
-    if (!tran_id) {
+    if (!transactionid) {
       console.error("Transaction ID not found in URL.");
       setLoading(false);
       return;
     }
 
-    const apiUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/transactions/transaction/${tran_id}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/transactions/transaction/${transactionid}`;
     console.log("Fetching transaction from:", apiUrl);
 
     fetch(apiUrl)
@@ -44,8 +43,8 @@ const PaymentSuccess = () => {
         }
       })
       .catch((err) => console.error("Fetch error:", err))
-      .finally(() => setLoading(false)); // Stop loading after fetch
-  }, [tran_id]);
+      .finally(() => setLoading(false));
+  }, [transactionid]);
 
   const downloadPDF = () => {
     if (!transaction) return;

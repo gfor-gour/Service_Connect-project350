@@ -134,8 +134,8 @@ exports.successTransaction = async (req, res) => {
         }
       });
     }
+    res.redirect(`${process.env.NEXT_PUBLIC_APP_FRONTEND_URL}/payment-success/${tran_id}`);
 
-    res.redirect(`${process.env.NEXT_PUBLIC_APP_FRONTEND_URL}/payment-success`);
   } catch (error) {
     console.error("Success Transaction Error:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
