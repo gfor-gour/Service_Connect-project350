@@ -156,7 +156,7 @@ exports.failTransaction = async (req, res) => {
     transaction.status = "Failed";
     await transaction.save();
 
-    res.redirect(`${process.env.NEXT_PUBLIC_APP_FRONTEND_URL}/payment-failed`);
+    res.redirect(`${process.env.NEXT_PUBLIC_APP_FRONTEND_URL}/payment-failed/${tran_id}`);
   } catch (error) {
     console.error("Failed Transaction Error:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
