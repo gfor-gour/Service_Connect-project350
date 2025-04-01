@@ -78,6 +78,10 @@ const Sidebar = () => {
     }
   };
 
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div>
       {/* Mobile menu button */}
@@ -90,9 +94,9 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white py-8 px-4 flex flex-col transition-transform duration-300 lg:transform-none transform ${
+        className={`fixed top-0 left-0 w-64 h-full bg-gray-900 text-white py-8 px-4 flex flex-col transition-transform duration-300 lg:left-0 lg:transform-none transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        } lg:translate-x-0 lg:block`}
       >
         <div className="mb-8 text-center">
           <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
@@ -173,6 +177,14 @@ const Sidebar = () => {
           <span>Logout</span>
         </button>
       </div>
+
+      {/* Mobile overlay to close sidebar when clicked outside */}
+      <div
+        className={`fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 lg:hidden transition-all duration-300 ${
+          sidebarOpen ? "block" : "hidden"
+        }`}
+        onClick={closeSidebar}
+      />
     </div>
   );
 };
