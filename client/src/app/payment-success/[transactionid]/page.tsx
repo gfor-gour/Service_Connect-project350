@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import Sidebar from "../../components/Sidebar"; 
 
 interface Transaction {
   _id: string;
@@ -81,25 +82,31 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-green-600">Payment Successful</h2>
-        <p className="mt-2 text-gray-600">Thank you for your payment!</p>
+    <div className="flex bg-white min-h-screen">
+      {/* Sidebar */}
+      <Sidebar />
 
-        <div className="mt-4 border-t pt-4">
-          <p><strong>Transaction ID:</strong> {transaction._id}</p>
-          <p><strong>Name:</strong> {transaction.name}</p>
-          <p><strong>Address:</strong> {transaction.address}</p>
-          <p><strong>Amount:</strong> BDT {transaction.price}</p>
-          <p><strong>Status:</strong> {transaction.status}</p>
+      {/* Main content area */}
+      <div className="flex-1 p-4">
+        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg mx-auto">
+          <h2 className="text-2xl font-semibold text-violet-500">Payment Successful</h2>
+          <p className="mt-2 text-gray-800">Thank you for your payment!</p>
+
+          <div className="mt-4 border-t pt-4">
+            <p><strong>Transaction ID:</strong> {transaction._id}</p>
+            <p><strong>Name:</strong> {transaction.name}</p>
+            <p><strong>Address:</strong> {transaction.address}</p>
+            <p><strong>Amount:</strong> BDT {transaction.price}</p>
+            <p><strong>Status:</strong> {transaction.status}</p>
+          </div>
+
+          <button
+            onClick={downloadPDF}
+            className="mt-4 bg-violet-500 text-white px-4 py-2 rounded-lg hover:bg-violet-600"
+          >
+            Download PDF
+          </button>
         </div>
-
-        <button
-          onClick={downloadPDF}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-        >
-          Download PDF
-        </button>
       </div>
     </div>
   );

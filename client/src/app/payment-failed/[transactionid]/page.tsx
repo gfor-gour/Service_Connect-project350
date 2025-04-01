@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Sidebar from "../../components/Sidebar"; 
 
 interface Transaction {
   _id: string;
@@ -45,7 +46,7 @@ const PaymentFailed = () => {
   }, [transactionid]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen text-gray-600">Loading...</div>;
   }
 
   if (!transaction) {
@@ -57,17 +58,23 @@ const PaymentFailed = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-red-600">Payment Failed</h2>
-        <p className="mt-2 text-gray-600">Your payment could not be processed. Please try again.</p>
+    <div className="flex bg-white min-h-screen">
+      {/* Sidebar */}
+      <Sidebar />
 
-        <div className="mt-4 border-t pt-4">
-          <p><strong>Transaction ID:</strong> {transaction._id}</p>
-          <p><strong>Name:</strong> {transaction.name}</p>
-          <p><strong>Address:</strong> {transaction.address}</p>
-          <p><strong>Amount:</strong> BDT {transaction.price}</p>
-          <p><strong>Status:</strong> {transaction.status}</p>
+      {/* Main content area */}
+      <div className="flex-1 p-6">
+        <div className="bg-white shadow-2xl rounded-lg p-6 w-full max-w-lg mx-auto">
+          <h2 className="text-3xl font-semibold text-red-600 text-center">Payment Failed</h2>
+          <p className="mt-4 text-gray-700 text-center">We encountered an issue while processing your payment. Please try again later.</p>
+
+          <div className="mt-6 border-t pt-6 space-y-4">
+            <p className="text-lg"><strong>Transaction ID:</strong> {transaction._id}</p>
+            <p className="text-lg"><strong>Name:</strong> {transaction.name}</p>
+            <p className="text-lg"><strong>Address:</strong> {transaction.address}</p>
+            <p className="text-lg"><strong>Amount:</strong> BDT {transaction.price}</p>
+            <p className="text-lg"><strong>Status:</strong> {transaction.status}</p>
+          </div>
         </div>
       </div>
     </div>

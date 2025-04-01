@@ -11,6 +11,8 @@ import {
   Wrench,
   Bot,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -18,6 +20,7 @@ const Sidebar = () => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [workType, setWorkType] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -76,85 +79,100 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white py-8 px-4 flex flex-col">
-      <div className="mb-8 text-center">
-        <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
-          <span className="text-2xl font-bold">
-            {userName ? userName[0].toUpperCase() : "U"}
-          </span>
-        </div>
-        <h2 className="text-xl font-semibold">{userName}</h2>
-        {userRole === "provider" && workType && (
-          <p className="text-sm text-gray-400 mt-1 capitalize">{workType}</p>
-        )}
-      </div>
-
-      <nav className="flex-1">
-        <ul className="space-y-2">
-          <li>
-            <button
-              onClick={handleDashboardClick}
-              className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <LayoutDashboard size={20} />
-              <span>Dashboard</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={handleUpdateProfileClick}
-              className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <UserCog size={20} />
-              <span>Update Profile</span>
-            </button>
-          </li>
-          <li>
-            <Link
-              href="/search"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <Users size={20} />
-              <span>Find Users</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/messenger"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <MessageSquare size={20} />
-              <span>Messenger</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/services"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <Wrench size={20} />
-              <span>Services</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/chatbot"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <Bot size={20} />
-              <span>Chatbot</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
+    <div>
+      {/* Mobile menu button */}
       <button
-        onClick={handleLogout}
-        className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-red-600 transition-colors mt-auto"
+        className="lg:hidden p-4 fixed top-4 left-4 bg-gray-900 text-white rounded-full"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
       >
-        <LogOut size={20} />
-        <span>Logout</span>
+        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white py-8 px-4 flex flex-col transition-transform duration-300 lg:transform-none transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0`}
+      >
+        <div className="mb-8 text-center">
+          <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
+            <span className="text-2xl font-bold">
+              {userName ? userName[0].toUpperCase() : "U"}
+            </span>
+          </div>
+          <h2 className="text-xl font-semibold">{userName}</h2>
+          {userRole === "provider" && workType && (
+            <p className="text-sm text-gray-400 mt-1 capitalize">{workType}</p>
+          )}
+        </div>
+
+        <nav className="flex-1">
+          <ul className="space-y-2">
+            <li>
+              <button
+                onClick={handleDashboardClick}
+                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <LayoutDashboard size={20} />
+                <span>Dashboard</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleUpdateProfileClick}
+                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <UserCog size={20} />
+                <span>Update Profile</span>
+              </button>
+            </li>
+            <li>
+              <Link
+                href="/search"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <Users size={20} />
+                <span>Find Users</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/messenger"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <MessageSquare size={20} />
+                <span>Messenger</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/services"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <Wrench size={20} />
+                <span>Services</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/chatbot"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <Bot size={20} />
+                <span>Chatbot</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-red-600 transition-colors mt-auto"
+        >
+          <LogOut size={20} />
+          <span>Logout</span>
+        </button>
+      </div>
     </div>
   );
 };
