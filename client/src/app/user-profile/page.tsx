@@ -2,10 +2,7 @@
 
 import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import Link from 'next/link';
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import Search  from "../components/Search";
+import Sidebar from "../components/Sidebar";
 
 const UserProfile = () => {
   const [profile, setProfile] = useState({
@@ -125,32 +122,46 @@ const UserProfile = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-violet-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex-1 flex items-center justify-center text-red-500">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-gray-900">
-      <Navbar />
-      <div className="flex-grow container mx-auto px-4 py-8">
-        <div className="flex flex-col-reverse md:flex-row justify-between items-start gap-6">
-          {/* Search Section */}
-          <div className="bg-gray-100 shadow-lg p-8 rounded-lg w-full md:w-96 lg:w-[28rem]">
-            <h2 className="text-2xl font-bold mb-4">Search Users</h2>
-            <Search />
-          </div>
-
-          {/* Profile Form */}
-          <div className="w-full max-w-lg bg-gray-50 p-6 rounded-lg shadow-md mx-auto">
-            <div className="flex flex-col items-center">
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 p-8">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold mb-8 text-violet-900">User Dashboard</h1>
+          
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="flex flex-col items-center mb-8">
               <div className="relative mb-6">
                 <img
                   src={profile.profilePicture || "/default-avatar.png"}
                   alt="Profile"
-                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-2 border-black"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-violet-500"
                 />
                 <label
                   htmlFor="profilePicture"
-                  className="absolute bottom-0 right-0 bg-black text-white rounded-full px-2 py-1 text-xs cursor-pointer"
+                  className="absolute bottom-0 right-0 bg-violet-600 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-violet-700 transition-colors"
                 >
                   Change
                 </label>
@@ -163,10 +174,12 @@ const UserProfile = () => {
                   accept="image/*"
                 />
               </div>
+            </div>
 
-              <form onSubmit={handleSubmit} className="w-full">
-                <div className="mb-4">
-                  <label htmlFor="name" className="block text-lg font-semibold mb-1">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                     Name
                   </label>
                   <input
@@ -175,11 +188,11 @@ const UserProfile = () => {
                     name="name"
                     value={profile.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-black rounded focus:outline-none focus:ring-2 focus:ring-black"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                   />
                 </div>
-                <div className="mb-4">
-                  <label htmlFor="email" className="block text-lg font-semibold mb-1">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email
                   </label>
                   <input
@@ -188,11 +201,11 @@ const UserProfile = () => {
                     name="email"
                     value={profile.email}
                     readOnly
-                    className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-200"
+                    className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
                   />
                 </div>
-                <div className="mb-4">
-                  <label htmlFor="address" className="block text-lg font-semibold mb-1">
+                <div className="md:col-span-2">
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
                     Address
                   </label>
                   <input
@@ -201,24 +214,23 @@ const UserProfile = () => {
                     name="address"
                     value={profile.address}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-black rounded focus:outline-none focus:ring-2 focus:ring-black"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                   />
                 </div>
+              </div>
+
+              <div className="flex justify-center mt-8">
                 <button
                   type="submit"
-                  className="w-full px-4 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black"
+                  className="px-8 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-colors"
                 >
-                  Update Profile
+                  {loading ? "Updating..." : "Update Profile"}
                 </button>
-                <Link href="/messenger" className="block w-full mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black text-center">
-                  Go to Messenger
-                </Link>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
