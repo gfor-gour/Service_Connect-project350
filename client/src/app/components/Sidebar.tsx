@@ -138,13 +138,15 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                href="/messenger"
+                href={`/messenger?userId=${localStorage.getItem("userId")}`}
+                onClick={closeSidebar}
                 className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
               >
                 <MessageSquare size={20} />
                 <span>Messenger</span>
               </Link>
             </li>
+
             <li>
               <Link
                 href="/services"
@@ -190,7 +192,9 @@ const Sidebar = () => {
             </div>
             <h2 className="text-xl font-semibold">{userName}</h2>
             {userRole === "provider" && workType && (
-              <p className="text-sm text-gray-400 mt-1 capitalize">{workType}</p>
+              <p className="text-sm text-gray-400 mt-1 capitalize">
+                {workType}
+              </p>
             )}
           </div>
 
@@ -232,7 +236,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link
-                  href="/messenger"
+                  href={`/messenger?userId=${localStorage.getItem("userId")}`}
                   onClick={closeSidebar}
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
                 >
@@ -240,6 +244,7 @@ const Sidebar = () => {
                   <span>Messenger</span>
                 </Link>
               </li>
+
               <li>
                 <Link
                   href="/services"
