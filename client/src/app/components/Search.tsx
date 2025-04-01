@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import MapComponent from './MapComponent';
+import Sidebar from './Sidebar';
 
 interface User {
   _id: string;
@@ -66,78 +67,83 @@ export default function Search({ onSelectUser }: SearchProps) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search by name, email, or work type..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+    <div className="flex min-h-screen bg-gray-900 text-white">
+      <Sidebar />
+      <div className="flex-1 p-6 max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold text-violet-400 mb-6 text-center">Search Users</h1>
 
-      {/* Search Results */}
-      <div className="space-y-2">
-        {results.map((user) => (
-          <div
-            key={user._id}
-            className={`p-4 border border-gray-200 rounded shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-50 ${
-              selectedUser?._id === user._id ? 'bg-gray-100' : ''
-            }`}
-            onClick={() => handleUserClick(user)}
-          >
-            <div className="flex items-center">
-              <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mr-4">
-                {user.profilePicture ? (
-                  <img
-                    src={user.profilePicture}
-                    alt={user.name}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-gray-500 text-lg font-semibold">
-                    {user.name ? user.name.charAt(0) : '?'}
-                  </span>
-                )}
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="Search by name, email, or work type..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full p-3 border border-violet-500 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 mb-6"
+        />
+
+        {/* Search Results */}
+        <div className="space-y-4">
+          {results.map((user) => (
+            <div
+              key={user._id}
+              className={`p-5 border border-gray-700 rounded-lg shadow-md flex items-center justify-between cursor-pointer transition-all duration-300 hover:bg-gray-800 ${
+                selectedUser?._id === user._id ? 'bg-gray-800' : ''
+              }`}
+              onClick={() => handleUserClick(user)}
+            >
+              <div className="flex items-center">
+                <div className="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden mr-4">
+                  {user.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt={user.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-violet-300 text-lg font-semibold">
+                      {user.name ? user.name.charAt(0) : '?'}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-white">{user.name}</h3>
+                  <p className="text-sm text-gray-400">{user.email}</p>
+                  {user.role === 'provider' && (
+                    <p className="text-sm text-violet-400">{user.workType}</p>
+                  )}
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold">{user.name}</h3>
-                <p className="text-sm text-gray-500">{user.email}</p>
-                {user.role === 'provider' && (
-                  <p className="text-sm text-blue-500">{user.workType}</p>
-                )}
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => handleMessageClick(user._id)}
+                  className="px-4 py-2 text-sm bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+                >
+                  Message
+                </button>
+                <button
+                  onClick={() => handleBookClick(user._id)}
+                  disabled={user.role !== 'provider'}
+                  className={`px-4 py-2 text-sm rounded-lg transition-all duration-300 ${
+                    user.role === 'provider'
+                      ? 'bg-green-500 text-white hover:bg-green-600'
+                      : 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                  }`}
+                >
+                  Book
+                </button>
               </div>
             </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => handleMessageClick(user._id)}
-                className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Message
-              </button>
-              <button
-                onClick={() => handleBookClick(user._id)}
-                disabled={user.role !== 'provider'}
-                className={`px-3 py-1 text-sm rounded ${
-                  user.role === 'provider'
-                    ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                Book
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Map Component (Shows only if a user is selected) */}
-      {selectedUser && (
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-2">Location of {selectedUser.name}</h3>
-          <MapComponent address={selectedUser.address} />
+          ))}
         </div>
-      )}
+
+        {/* Map Component (Shows only if a user is selected) */}
+        {selectedUser && (
+          <div className="mt-6 bg-gray-800 p-5 rounded-lg shadow-lg">
+            <h3 className="text-xl font-semibold text-violet-300 mb-3">Location of {selectedUser.name}</h3>
+            <MapComponent address={selectedUser.address} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

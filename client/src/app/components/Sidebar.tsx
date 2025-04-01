@@ -55,7 +55,7 @@ const Sidebar = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("email");
     localStorage.removeItem("userRole");
-    
+
     router.push("/");
   };
 
@@ -76,7 +76,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white w-64 py-8 px-4">
+    <div className="fixed top-0 left-0 w-64 h-screen bg-gray-900 text-white py-8 px-4 flex flex-col">
       <div className="mb-8 text-center">
         <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
           <span className="text-2xl font-bold">
@@ -111,7 +111,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              href="/find-users"
+              href="/search"
               className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
             >
               <Users size={20} />

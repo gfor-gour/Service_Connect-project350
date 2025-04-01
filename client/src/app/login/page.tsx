@@ -43,9 +43,9 @@ const Login = () => {
 
         setTimeout(() => {
           if (data.user.role === "provider") {
-            router.push("/provider-profile");
+            router.push("/provider");
           } else {
-            router.push("/user-profile");
+            router.push("/user");
           }
         }, 2000);
       } else {
