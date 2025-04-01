@@ -1,0 +1,197 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [error, setError] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setIsSuccess(false);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsSuccess(true);
+
+        // Save token, user ID, and email in localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("email", data.user.email);
+
+        setTimeout(() => {
+          if (data.user.role === "provider") {
+            router.push("/provider");
+          } else {
+            router.push("/user");
+          }
+        }, 2000);
+      } else {
+        const data = await response.json();
+        setError(data.message || "Failed to log in");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/forgot-password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: resetEmail }),
+        }
+      );
+
+      if (response.ok) {
+        alert("Check your email for reset instructions");
+      } else {
+        alert("Failed to send reset instructions");
+      }
+    } catch (err) {
+      alert("An error occurred. Please try again later.");
+    }
+  };
+
+  return (
+    <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col justify-center items-center py-12">
+      <div className="max-w-lg w-full bg-gray-100 dark:bg-gray-800 p-10 md:p-12 lg:p-16 rounded-lg shadow-lg">
+        {/* Lock Icon SVG */}
+        <div className="text-center mb-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="mx-auto mb-4 w-24 h-24 text-violet-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M3 7h18M3 12h18M3 17h18M3 3v18h18V3H3z"
+            />
+          </svg>
+        </div>
+
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">
+          Login
+        </h1>
+
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+
+        {isSuccess ? (
+          <p className="text-green-500 mb-4 text-center">
+            Logged in successfully! Redirecting to profile...
+          </p>
+        ) : isForgotPassword ? (
+          <form onSubmit={handleForgotPassword}>
+            <div className="mb-4">
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full p-3 bg-black text-white rounded-md"
+            >
+              Send Reset Link
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                required
+              />
+            </div>
+
+            <div className="mb-4 relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700 pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full p-3 rounded-md text-white bg-black ${
+                loading ? "bg-gray-500 cursor-not-allowed" : "hover:bg-gray-700"
+              }`}
+            >
+              {loading ? "Logging In..." : "Login"}
+            </button>
+            <p className="text-center mt-4">
+              <button
+                onClick={() => setIsForgotPassword(true)}
+                className="text-violet-600 hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </p>
+          </form>
+        )}
+
+        <div className="mt-4 text-center">
+          <p className="text-sm">
+            Don't have an account?{" "}
+            <Link href="/signup" className="text-violet-600 hover:underline">
+              Sign up here
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
