@@ -1,28 +1,28 @@
-"use client"; // Ensure this is a Client Component
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false); // New state for success message
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
     setIsSuccess(false); // Reset success state before making the request
 
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/register`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password, role }),
         }
       );
@@ -34,10 +34,10 @@ const SignUp = () => {
         }, 2000); // Wait for 2 seconds to show success message
       } else {
         const data = await response.json();
-        setError(data.message || 'Failed to sign up');
+        setError(data.message || "Failed to sign up");
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,27 @@ const SignUp = () => {
   return (
     <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col justify-center items-center py-12">
       <div className="max-w-md w-full bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">Sign Up</h1>
+        {/* Lock Icon SVG with Sign Up Logo */}
+        <div className="text-center mb-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="mx-auto mb-4 w-24 h-24 text-violet-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 9v12m-3-9l3 3 3-3"
+            />
+          </svg>
+        </div>
+
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">
+          Sign Up
+        </h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
         {isSuccess && (
@@ -83,7 +103,7 @@ const SignUp = () => {
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700 focus:ring-violet-600 focus:border-violet-600"
               >
                 <option value="user">User</option>
                 <option value="provider">Provider</option>
@@ -94,18 +114,18 @@ const SignUp = () => {
               type="submit"
               disabled={loading}
               className={`w-full p-3 rounded-md text-white bg-black ${
-                loading ? 'bg-gray-500 cursor-not-allowed' : 'hover:bg-gray-700'
+                loading ? "bg-gray-500 cursor-not-allowed" : "hover:bg-gray-700"
               }`}
             >
-              {loading ? 'Signing Up...' : 'Sign Up'}
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </form>
         )}
 
         <div className="mt-4 text-center">
           <p className="text-sm">
-            Already registered?{' '}
-            <Link href="/login" className="text-blue-500 hover:underline">
+            Already registered?{" "}
+            <Link href="/login" className="text-violet-600 hover:underline">
               Log in here
             </Link>
           </p>

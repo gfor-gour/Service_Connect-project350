@@ -83,8 +83,28 @@ const Login = () => {
 
   return (
     <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col justify-center items-center py-12">
-      <div className="max-w-md w-full bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">Login</h1>
+      <div className="max-w-lg w-full bg-gray-100 dark:bg-gray-800 p-10 md:p-12 lg:p-16 rounded-lg shadow-lg">
+        {/* Lock Icon SVG */}
+        <div className="text-center mb-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="mx-auto mb-4 w-24 h-24 text-violet-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M3 7h18M3 12h18M3 17h18M3 3v18h18V3H3z"
+            />
+          </svg>
+        </div>
+
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">
+          Login
+        </h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
@@ -153,7 +173,7 @@ const Login = () => {
             <p className="text-center mt-4">
               <button
                 onClick={() => setIsForgotPassword(true)}
-                className="text-blue-600 hover:underline"
+                className="text-violet-600 hover:underline"
               >
                 Forgot Password?
               </button>
@@ -164,7 +184,7 @@ const Login = () => {
         <div className="mt-4 text-center">
           <p className="text-sm">
             Don't have an account?{" "}
-            <Link href="/signup" className="text-blue-500 hover:underline">
+            <Link href="/signup" className="text-violet-600 hover:underline">
               Sign up here
             </Link>
           </p>

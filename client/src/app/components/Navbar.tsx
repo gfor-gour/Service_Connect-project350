@@ -17,26 +17,10 @@ const Navbar = () => {
       <ul className="hidden md:flex gap-6">
         <li>
           <Link
-            href="/services"
-            className="text-black dark:text-white hover:underline"
-          >
-            Services
-          </Link>
-        </li>
-        <li>
-          <Link
             href="/about"
             className="text-black dark:text-white hover:underline"
           >
             About
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/chatbot"
-            className="text-black dark:text-white hover:underline"
-          >
-            Chatbot
           </Link>
         </li>
         <li>
@@ -53,13 +37,13 @@ const Navbar = () => {
       <div className="hidden md:flex items-center gap-4">
         <Link
           href="/login"
-          className="px-4 py-2 border border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition"
+          className="px-4 py-2 bg-purple-600 text-white dark:bg-purple-600 dark:text-white hover:bg-purple-700 dark:hover:bg-purple-700 transition"
         >
           Log In
         </Link>
         <Link
           href="/signup"
-          className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition"
+          className="px-4 py-2 border border-purple-600 text-black dark:text-black bg-white dark:bg-black dark:border-white hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white transition"
         >
           Sign Up
         </Link>
@@ -88,29 +72,11 @@ const Navbar = () => {
         <ul className="flex flex-col items-center gap-6">
           <li>
             <Link
-              href="/services"
-              className="text-black dark:text-white hover:underline text-lg"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link
               href="/about"
               className="text-black dark:text-white hover:underline text-lg"
               onClick={() => setIsMenuOpen(false)}
             >
               About
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/chatbot"
-              className="text-black dark:text-white hover:underline text-lg"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Chatbot
             </Link>
           </li>
           <li>
@@ -126,14 +92,14 @@ const Navbar = () => {
         <div className="flex flex-col items-center gap-4">
           <Link
             href="/login"
-            className="px-4 py-2 border border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition"
+            className="px-4 py-2 bg-purple-600 text-white dark:bg-purple-600 dark:text-white hover:bg-purple-700 dark:hover:bg-purple-700 transition"
             onClick={() => setIsMenuOpen(false)}
           >
             Log In
           </Link>
           <Link
             href="/signup"
-            className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition"
+            className="px-4 py-2 border border-purple-600 text-black dark:text-black bg-white dark:bg-black dark:border-white hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white transition"
             onClick={() => setIsMenuOpen(false)}
           >
             Sign Up

@@ -1,31 +1,35 @@
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Image from "next/image";
+import Link from "next/link";
 
 const Home = () => {
   return (
     <>
       {/* Navbar */}
       <Navbar />
-      
+
       {/* Main Content */}
       <main className="bg-white dark:bg-black text-black dark:text-white min-h-screen">
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center text-center p-8 md:p-16">
+        <section className="flex flex-col items-center justify-center text-center p-8 md:p-16 bg-black text-white dark:bg-black dark:text-white">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
             Find Trusted Local Services
           </h1>
           <p className="text-lg md:text-2xl mb-8 max-w-2xl">
-            Connecting you with professional electricians, plumbers, babysitters, and more!
+            Connecting you with professional electricians, plumbers,
+            babysitters, and more!
           </p>
-          <button className="px-6 py-3 bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition rounded">
+          <button className="px-6 py-3 border-2 border-violet-600 text-white dark:text-black dark:bg-black bg-violet-600 hover:opacity-90 transition rounded">
             Explore Services
           </button>
         </section>
 
         {/* Service Categories */}
         <section className="p-8 md:p-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 text-violet-600 dark:text-violet-600">
+            Our Services
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { name: "Electricians", image: "/electrician.jpeg" },
@@ -35,7 +39,7 @@ const Home = () => {
             ].map((service, index) => (
               <div
                 key={index}
-                className="relative group bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md"
+                className="relative group bg-violet-100 dark:bg-violet-800 rounded-lg overflow-hidden shadow-md"
               >
                 <Image
                   src={service.image}
@@ -55,15 +59,16 @@ const Home = () => {
         </section>
 
         {/* Call to Action */}
-        <section className="flex flex-col items-center justify-center text-center p-8 md:p-16 bg-black text-white dark:bg-white dark:text-black">
+        <section className="flex flex-col items-center justify-center text-center p-8 md:p-16 bg-black text-white dark:bg-black dark:text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
             Ready to Book a Service?
           </h2>
           <p className="text-lg md:text-xl mb-8 max-w-2xl">
             Discover trusted professionals in your area today!
           </p>
-          <button className="px-6 py-3 bg-white text-black dark:bg-black dark:text-white hover:opacity-90 transition rounded">
-            Get Started
+
+          <button className="px-6 py-3 border-2 border-violet-600 text-white dark:text-black dark:bg-black bg-violet-600 hover:opacity-90 transition rounded">
+            <Link href="/login">Get Started</Link>
           </button>
         </section>
       </main>
