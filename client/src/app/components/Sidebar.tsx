@@ -20,7 +20,7 @@ const Sidebar = () => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [workType, setWorkType] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -83,21 +83,18 @@ const Sidebar = () => {
   };
 
   return (
-    <div>
+    <>
       {/* Mobile menu button */}
       <button
-        className="lg:hidden p-4 fixed top-4 left-4 bg-gray-900 text-white rounded-full"
+        className="lg:hidden fixed top-4 right-4 z-[60] p-3 bg-gray-900 text-white rounded-full shadow-lg hover:bg-gray-800 transition-colors"
         onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle menu"
       >
         {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 w-64 h-full bg-gray-900 text-white py-8 px-4 flex flex-col transition-transform duration-300 lg:left-0 lg:transform-none transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:block`}
-      >
+      {/* Desktop sidebar */}
+      <div className="hidden lg:flex fixed left-0 top-0 w-64 h-full bg-gray-900 text-white py-8 px-4 flex-col">
         <div className="mb-8 text-center">
           <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
             <span className="text-2xl font-bold">
@@ -178,14 +175,115 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Mobile overlay to close sidebar when clicked outside */}
+      {/* Mobile sidebar */}
       <div
-        className={`fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 lg:hidden transition-all duration-300 ${
-          sidebarOpen ? "block" : "hidden"
+        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-gray-900 text-white py-8 px-4 transform transition-transform duration-300 ease-in-out z-50 ${
+          sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        onClick={closeSidebar}
-      />
-    </div>
+      >
+        <div className="h-full flex flex-col pt-12">
+          <div className="mb-8 text-center">
+            <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
+              <span className="text-2xl font-bold">
+                {userName ? userName[0].toUpperCase() : "U"}
+              </span>
+            </div>
+            <h2 className="text-xl font-semibold">{userName}</h2>
+            {userRole === "provider" && workType && (
+              <p className="text-sm text-gray-400 mt-1 capitalize">{workType}</p>
+            )}
+          </div>
+
+          <nav className="flex-1">
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={() => {
+                    handleDashboardClick();
+                    closeSidebar();
+                  }}
+                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <LayoutDashboard size={20} />
+                  <span>Dashboard</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    handleUpdateProfileClick();
+                    closeSidebar();
+                  }}
+                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <UserCog size={20} />
+                  <span>Update Profile</span>
+                </button>
+              </li>
+              <li>
+                <Link
+                  href="/search"
+                  onClick={closeSidebar}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <Users size={20} />
+                  <span>Find Users</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/messenger"
+                  onClick={closeSidebar}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <MessageSquare size={20} />
+                  <span>Messenger</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  onClick={closeSidebar}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <Wrench size={20} />
+                  <span>Services</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/chatbot"
+                  onClick={closeSidebar}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  <Bot size={20} />
+                  <span>Chatbot</span>
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <button
+            onClick={() => {
+              handleLogout();
+              closeSidebar();
+            }}
+            className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-red-600 transition-colors mt-auto"
+          >
+            <LogOut size={20} />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          onClick={closeSidebar}
+        />
+      )}
+    </>
   );
 };
 
