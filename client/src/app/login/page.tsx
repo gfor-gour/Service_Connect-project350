@@ -82,29 +82,18 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col justify-center items-center py-12">
-      <div className="max-w-lg w-full bg-gray-100 dark:bg-gray-800 p-10 md:p-12 lg:p-16 rounded-lg shadow-lg">
-        {/* Lock Icon SVG */}
+    <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white min-h-screen flex flex-col justify-center items-center py-12">
+      <div className="max-w-lg w-full bg-white dark:bg-gray-900 p-10 md:p-12 lg:p-16 rounded-2xl shadow-2xl">
+        {/* Updated Header */}
         <div className="text-center mb-6">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="mx-auto mb-4 w-24 h-24 text-violet-600"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M3 7h18M3 12h18M3 17h18M3 3v18h18V3H3z"
-            />
-          </svg>
+          <h1 className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
+            Login
+          </h1>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">
-          Login
-        </h1>
+        <p className="text-gray-700 dark:text-gray-300 text-center mb-6">
+          Welcome back! Log in to access your account and connect with trusted local services.
+        </p>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
@@ -120,12 +109,12 @@ const Login = () => {
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-gray-100 dark:bg-gray-800"
               />
             </div>
             <button
               type="submit"
-              className="w-full p-3 bg-black text-white rounded-md"
+              className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
             >
               Send Reset Link
             </button>
@@ -138,7 +127,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                className="w-full p-3 mb-4 border rounded-md text-black dark:text-white bg-gray-100 dark:bg-gray-800"
                 required
               />
             </div>
@@ -149,7 +138,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700 pr-10"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-gray-100 dark:bg-gray-800 pr-10"
                 required
               />
               <button
@@ -164,8 +153,8 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full p-3 rounded-md text-white bg-black ${
-                loading ? "bg-gray-500 cursor-not-allowed" : "hover:bg-gray-700"
+              className={`w-full p-4 rounded-md text-xl font-extrabold text-white bg-indigo-600 ${
+                loading ? "bg-indigo-400 cursor-not-allowed" : "hover:bg-indigo-700"
               }`}
             >
               {loading ? "Logging In..." : "Login"}
@@ -173,7 +162,7 @@ const Login = () => {
             <p className="text-center mt-4">
               <button
                 onClick={() => setIsForgotPassword(true)}
-                className="text-violet-600 hover:underline"
+                className="inline-block mt-2 px-6 py-2 text-sm font-bold text-indigo-600 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
               >
                 Forgot Password?
               </button>
@@ -181,13 +170,16 @@ const Login = () => {
           </form>
         )}
 
-        <div className="mt-4 text-center">
-          <p className="text-sm">
-            Don't have an account?{" "}
-            <Link href="/signup" className="text-violet-600 hover:underline">
-              Sign up here
-            </Link>
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Don't have an account?
           </p>
+          <Link
+            href="/signup"
+            className="inline-block mt-2 px-6 py-2 text-sm font-bold text-indigo-600 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            Sign up here
+          </Link>
         </div>
       </div>
     </div>

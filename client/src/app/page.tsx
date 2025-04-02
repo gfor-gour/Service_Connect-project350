@@ -29,7 +29,7 @@ const Home = () => {
           {/* Get Started Button */}
           <button
             onClick={openDialog}
-            className="px-8 py-4 text-lg font-bold text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 transition focus:outline-none focus:ring-4 focus:ring-indigo-300"
+            className="px-10 py-5 text-lg font-extrabold text-white bg-black rounded-full shadow-2xl hover:bg-gray-800 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-400"
           >
             Get Started
           </button>
@@ -73,28 +73,31 @@ const Home = () => {
 
         {/* Dialog Box */}
         {isDialogOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-sm w-full">
-              <h2 className="text-2xl font-bold text-center mb-6 text-indigo-600 dark:text-indigo-400">
-                Get Started
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl max-w-md w-full text-center">
+              <h2 className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mb-4">
+                Welcome to Our Platform!
               </h2>
+              <p className="text-gray-700 dark:text-gray-300 mb-6">
+                We're excited to have you here. Whether you're looking for services or offering them, let's get started on your journey!
+              </p>
               <div className="flex flex-col gap-4">
                 <button
                   onClick={() => (window.location.href = "/login")}
-                  className="w-full px-4 py-2 text-lg font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition"
+                  className="w-full px-6 py-3 text-lg font-bold text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition"
                 >
                   Login
                 </button>
                 <button
                   onClick={() => (window.location.href = "/signup")}
-                  className="w-full px-4 py-2 text-lg font-bold text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition"
+                  className="w-full px-6 py-3 text-lg font-bold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 transition"
                 >
                   Sign Up
                 </button>
               </div>
               <button
                 onClick={closeDialog}
-                className="mt-6 w-full px-4 py-2 text-lg font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                className="mt-6 px-6 py-3 text-lg font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
               >
                 Cancel
               </button>

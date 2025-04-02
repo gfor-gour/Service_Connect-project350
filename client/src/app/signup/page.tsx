@@ -44,29 +44,18 @@ const SignUp = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col justify-center items-center py-12">
-      <div className="max-w-md w-full bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-        {/* Lock Icon SVG with Sign Up Logo */}
+    <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white min-h-screen flex flex-col justify-center items-center py-12">
+      <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl">
+        {/* Updated Header */}
         <div className="text-center mb-6">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="mx-auto mb-4 w-24 h-24 text-violet-600"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 9v12m-3-9l3 3 3-3"
-            />
-          </svg>
+          <h1 className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
+            Sign Up
+          </h1>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">
-          Sign Up
-        </h1>
+        <p className="text-gray-700 dark:text-gray-300 text-center mb-6">
+          Create your account to access trusted local services. It's quick, easy, and secure!
+        </p>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
         {isSuccess && (
@@ -83,7 +72,7 @@ const SignUp = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-gray-100 dark:bg-gray-800"
                 required
               />
             </div>
@@ -94,7 +83,7 @@ const SignUp = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-gray-100 dark:bg-gray-800"
                 required
               />
             </div>
@@ -103,7 +92,7 @@ const SignUp = () => {
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full p-3 border rounded-md text-black dark:text-white bg-white dark:bg-gray-700 focus:ring-violet-600 focus:border-violet-600"
+                className="w-full p-3 border rounded-md text-black dark:text-white bg-gray-100 dark:bg-gray-800 focus:ring-indigo-600 focus:border-indigo-600"
               >
                 <option value="user">User</option>
                 <option value="provider">Provider</option>
@@ -113,8 +102,8 @@ const SignUp = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full p-3 rounded-md text-white bg-black ${
-                loading ? "bg-gray-500 cursor-not-allowed" : "hover:bg-gray-700"
+              className={`w-full p-3 rounded-md text-white bg-indigo-600 ${
+                loading ? "bg-indigo-400 cursor-not-allowed" : "hover:bg-indigo-700"
               }`}
             >
               {loading ? "Signing Up..." : "Sign Up"}
@@ -122,13 +111,16 @@ const SignUp = () => {
           </form>
         )}
 
-        <div className="mt-4 text-center">
-          <p className="text-sm">
-            Already registered?{" "}
-            <Link href="/login" className="text-violet-600 hover:underline">
-              Log in here
-            </Link>
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Already registered?
           </p>
+          <Link
+            href="/login"
+            className="inline-block mt-2 px-6 py-2 text-sm font-bold text-indigo-600 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            Log in here
+          </Link>
         </div>
       </div>
     </div>
