@@ -7,26 +7,29 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="flex items-center justify-between p-6 bg-white dark:bg-black border-b border-black dark:border-white">
+    <nav className="flex items-center justify-between p-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white shadow-lg">
       {/* Logo */}
-      <Link href="/" className="text-xl font-bold text-black dark:text-white">
-        ServiceConnect
+      <Link href="/" className="text-2xl font-extrabold tracking-wide">
+        <span className="bg-white text-indigo-600 px-2 py-1 rounded-md shadow-md">
+          Service
+        </span>
+        <span className="ml-1">Connect</span>
       </Link>
 
       {/* Desktop Links */}
-      <ul className="hidden md:flex gap-6">
+      <ul className="hidden md:flex gap-8">
         <li>
           <Link
             href="/about"
-            className="text-black dark:text-white hover:underline"
+            className="text-lg font-semibold px-4 py-2 rounded-lg hover:bg-white hover:text-indigo-600 transition"
           >
-            About
+            About Us
           </Link>
         </li>
         <li>
           <Link
             href="/contact"
-            className="text-black dark:text-white hover:underline"
+            className="text-lg font-semibold px-4 py-2 rounded-lg hover:bg-white hover:text-indigo-600 transition"
           >
             Contact
           </Link>
@@ -37,13 +40,13 @@ const Navbar = () => {
       <div className="hidden md:flex items-center gap-4">
         <Link
           href="/login"
-          className="px-4 py-2 bg-purple-600 text-white dark:bg-purple-600 dark:text-white hover:bg-purple-700 dark:hover:bg-purple-700 transition"
+          className="px-6 py-2 text-lg font-bold text-indigo-600 bg-white rounded-lg shadow-md hover:bg-gray-100 transition"
         >
           Log In
         </Link>
         <Link
           href="/signup"
-          className="px-4 py-2 border border-purple-600 text-black dark:text-black bg-white dark:bg-black dark:border-white hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white transition"
+          className="px-6 py-2 text-lg font-bold text-white bg-purple-700 rounded-lg shadow-md hover:bg-purple-800 transition"
         >
           Sign Up
         </Link>
@@ -51,7 +54,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Button */}
       <button
-        className="md:hidden text-black dark:text-white"
+        className="md:hidden text-white text-2xl"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         ☰
@@ -59,12 +62,12 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`absolute top-0 left-0 w-full h-screen bg-white dark:bg-black flex flex-col items-center justify-center gap-6 transition-transform duration-300 ${
+        className={`absolute top-0 left-0 w-full h-screen bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white flex flex-col items-center justify-center gap-6 transition-transform duration-300 ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:hidden`}
       >
         <button
-          className="absolute top-4 right-4 text-black dark:text-white text-2xl"
+          className="absolute top-4 right-4 text-white text-2xl"
           onClick={() => setIsMenuOpen(false)}
         >
           ✕
@@ -73,16 +76,16 @@ const Navbar = () => {
           <li>
             <Link
               href="/about"
-              className="text-black dark:text-white hover:underline text-lg"
+              className="text-lg font-semibold px-4 py-2 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               onClick={() => setIsMenuOpen(false)}
             >
-              About
+              About Us
             </Link>
           </li>
           <li>
             <Link
               href="/contact"
-              className="text-black dark:text-white hover:underline text-lg"
+              className="text-lg font-semibold px-4 py-2 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
@@ -92,14 +95,14 @@ const Navbar = () => {
         <div className="flex flex-col items-center gap-4">
           <Link
             href="/login"
-            className="px-4 py-2 bg-purple-600 text-white dark:bg-purple-600 dark:text-white hover:bg-purple-700 dark:hover:bg-purple-700 transition"
+            className="px-6 py-2 text-lg font-bold text-indigo-600 bg-white rounded-lg shadow-md hover:bg-gray-100 transition"
             onClick={() => setIsMenuOpen(false)}
           >
             Log In
           </Link>
           <Link
             href="/signup"
-            className="px-4 py-2 border border-purple-600 text-black dark:text-black bg-white dark:bg-black dark:border-white hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white transition"
+            className="px-6 py-2 text-lg font-bold text-white bg-purple-700 rounded-lg shadow-md hover:bg-purple-800 transition"
             onClick={() => setIsMenuOpen(false)}
           >
             Sign Up

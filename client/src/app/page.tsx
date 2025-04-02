@@ -152,6 +152,12 @@ const Home = () => {
           <p className="text-lg md:text-xl mb-8 max-w-2xl">
             Join thousands of satisfied customers and book your trusted service provider today.
           </p>
+          <button
+            onClick={openDialog}
+            className="px-10 py-5 text-lg font-extrabold text-white bg-blue-600 rounded-full shadow-2xl hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400"
+          >
+            Explore Services
+          </button>
         </section>
       </main>
 
