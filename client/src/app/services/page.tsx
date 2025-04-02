@@ -97,7 +97,7 @@ function ServicesPage() {
                   onClick={() => fetchProviders(service.category)}
                   className="px-6 py-3 bg-violet-600 text-white font-semibold rounded-lg hover:bg-violet-700 transition"
                 >
-                  View Providers
+                  View {service.category}
                 </button>
               </div>
             </div>
