@@ -102,12 +102,6 @@ const Sidebar = () => {
             </span>
           </div>
           <h2 className="text-xl font-semibold">{userName}</h2>
-          <button
-            onClick={handleUpdateProfileClick}
-            className="mt-2 text-sm font-medium text-indigo-600 bg-white px-4 py-2 rounded-full shadow-md hover:bg-gray-100 transition"
-          >
-            Update Profile
-          </button>
         </div>
 
         <nav className="flex-1">
