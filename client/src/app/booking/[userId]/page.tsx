@@ -199,68 +199,77 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      <div className="w-full max-w-4xl mx-auto p-6 bg-white">
-        {provider ? (
-          <div>
-            <h2 className="text-3xl font-bold text-violet-700 mb-6">
-              Book Provider
-            </h2>
-            <div className="flex items-center mb-8">
-              <div className="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mr-6">
-                {provider.profilePicture ? (
-                  <img
-                    src={provider.profilePicture}
-                    alt={provider.name}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-violet-600 text-3xl font-bold">
-                    {provider.name.charAt(0)}
-                  </span>
-                )}
+      <div className="flex-1 lg:ml-64 p-8">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-4xl font-extrabold mb-8 text-indigo-600 dark:text-indigo-400">
+            Book Provider
+          </h1>
+
+          {provider ? (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+              <div className="flex items-center mb-8">
+                <div className="h-20 w-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden mr-6 shadow-md">
+                  {provider.profilePicture ? (
+                    <img
+                      src={provider.profilePicture}
+                      alt={provider.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-indigo-600 dark:text-indigo-400 text-3xl font-bold">
+                      {provider.name.charAt(0)}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                    {provider.name}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">{provider.email}</p>
+                  {provider.workType && (
+                    <p className="text-sm text-indigo-600 dark:text-indigo-400">
+                      {provider.workType}
+                    </p>
+                  )}
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800">
-                  {provider.name}
-                </h3>
-                <p className="text-gray-600">{provider.email}</p>
-                {provider.workType && (
-                  <p className="text-sm text-violet-600">{provider.workType}</p>
-                )}
-              </div>
+
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full border border-gray-300 dark:border-gray-600 p-3 rounded-lg mb-6 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                placeholder="Enter booking details..."
+              />
+
+              <button
+                onClick={handleBookingRequest}
+                disabled={bookingStatus === "Booked" || isProcessing}
+                className="bg-indigo-600 text-white px-6 py-3 rounded-lg w-full hover:bg-indigo-700 transition"
+              >
+                {isProcessing
+                  ? "Processing..."
+                  : bookingStatus === "Booked"
+                  ? "Already Booked"
+                  : "Book Now"}
+              </button>
             </div>
+          ) : (
+            <p className="text-center text-gray-600 dark:text-gray-400">Loading provider information...</p>
+          )}
 
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full border p-3 rounded-md mb-6"
-              placeholder="Enter booking details..."
-            />
-
-            <button
-              onClick={handleBookingRequest}
-              disabled={bookingStatus === "Booked" || isProcessing}
-              className="bg-violet-600 text-white px-6 py-3 rounded-lg w-full"
-            >
-              {isProcessing
-                ? "Processing..."
-                : bookingStatus === "Booked"
-                ? "Already Booked"
-                : "Book Now"}
-            </button>
-
-            {/* Booking History */}
-            {bookingHistory.length > 0 && (
-              <div className="mt-8">
-                <h2 className="text-2xl font-semibold text-violet-700 mb-4">
-                  Booking History
-                </h2>
+          {/* Booking History */}
+          {bookingHistory.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-6">
+                Booking History
+              </h2>
+              <div className="space-y-4">
                 {bookingHistory.map((booking) => (
                   <div
                     key={booking._id}
-                    className="border p-6 mb-4 rounded-lg bg-violet-50 shadow-lg"
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-lg shadow-md"
                   >
                     <p>
                       <strong>Provider:</strong> {booking.providerId.name}
@@ -276,28 +285,28 @@ export default function BookingPage() {
                         <strong>Price:</strong> {booking.price} BDT
                       </p>
                     )}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {new Date(booking.createdAt).toLocaleString()}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Payment Status: {booking.paymentStatus}
                     </p>
 
-                    {/* Show Payment Options if Status is Accepted and Payment not successful */}
+                    {/* Payment Options */}
                     {booking.status === "accepted" &&
                       booking.paymentStatus !== "success" &&
                       booking.price && (
                         <div className="mt-4 flex space-x-4">
                           <button
                             onClick={() => handleCashOnDelivery(booking)}
-                            className="bg-gray-700 text-white px-4 py-2 rounded-md"
+                            className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition"
                           >
                             Cash on Delivery
                           </button>
                           <button
                             onClick={() => handlePayment(booking)}
                             disabled={booking.paymentStatus === "success"}
-                            className="bg-violet-500 text-white px-4 py-2 rounded-md hover:bg-violet-600"
+                            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
                           >
                             Pay {booking.price} BDT
                           </button>
@@ -306,11 +315,9 @@ export default function BookingPage() {
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        ) : (
-          <p>Loading provider information...</p>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
