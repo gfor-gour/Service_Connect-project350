@@ -94,17 +94,14 @@ const Sidebar = () => {
       </button>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:flex fixed left-0 top-0 w-64 h-full bg-gray-900 text-white py-8 px-4 flex-col">
+      <div className="hidden lg:flex fixed left-0 top-0 w-64 h-full bg-gradient-to-b from-indigo-600 via-purple-600 to-indigo-600 text-white py-8 px-6 flex-col shadow-lg">
         <div className="mb-8 text-center">
-          <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
-            <span className="text-2xl font-bold">
+          <div className="w-24 h-24 rounded-full bg-white mx-auto mb-4 flex items-center justify-center shadow-md">
+            <span className="text-3xl font-bold text-indigo-600">
               {userName ? userName[0].toUpperCase() : "U"}
             </span>
           </div>
           <h2 className="text-xl font-semibold">{userName}</h2>
-          {userRole === "provider" && workType && (
-            <p className="text-sm text-gray-400 mt-1 capitalize">{workType}</p>
-          )}
         </div>
 
         <nav className="flex-1">
@@ -112,25 +109,16 @@ const Sidebar = () => {
             <li>
               <button
                 onClick={handleDashboardClick}
-                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               >
                 <LayoutDashboard size={20} />
                 <span>Dashboard</span>
               </button>
             </li>
             <li>
-              <button
-                onClick={handleUpdateProfileClick}
-                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <UserCog size={20} />
-                <span>Update Profile</span>
-              </button>
-            </li>
-            <li>
               <Link
                 href="/search"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               >
                 <Users size={20} />
                 <span>Find Users</span>
@@ -139,18 +127,16 @@ const Sidebar = () => {
             <li>
               <Link
                 href={`/messenger?userId=${localStorage.getItem("userId")}`}
-                onClick={closeSidebar}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               >
                 <MessageSquare size={20} />
                 <span>Messenger</span>
               </Link>
             </li>
-
             <li>
               <Link
                 href="/services"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               >
                 <Wrench size={20} />
                 <span>Services</span>
@@ -159,10 +145,10 @@ const Sidebar = () => {
             <li>
               <Link
                 href="/chatbot"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               >
                 <Bot size={20} />
-                <span>Chatbot</span>
+                <span>AI Assistant</span>
               </Link>
             </li>
           </ul>
@@ -170,7 +156,7 @@ const Sidebar = () => {
 
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-red-600 transition-colors mt-auto"
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition mt-auto"
         >
           <LogOut size={20} />
           <span>Logout</span>
@@ -262,7 +248,7 @@ const Sidebar = () => {
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <Bot size={20} />
-                  <span>Chatbot</span>
+                  <span>AI Assistant</span>
                 </Link>
               </li>
             </ul>

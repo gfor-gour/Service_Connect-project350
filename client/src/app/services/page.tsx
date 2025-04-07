@@ -69,12 +69,12 @@ function ServicesPage() {
   return (
     <div className="flex bg-white dark:bg-black min-h-screen">
       <Sidebar />
-      <main className="flex-1 p-8 lg:ml-64 text-black dark:text-white">
-        <h1 className="text-4xl font-bold text-violet-700 mb-6">Our Services</h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
+      <main className="flex-1 p-8 flex flex-col items-center text-black dark:text-white">
+        <h1 className="text-4xl font-bold text-violet-700 mb-6 text-center">Our Services</h1>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center max-w-2xl">
           Explore our wide range of services and find the perfect provider for your needs.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl">
           {services.map((service, index) => (
             <div
               key={index}

@@ -144,108 +144,108 @@ const ProviderProfile = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      <div className="flex-1 p-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 text-violet-900">Provider Dashboard</h1>
-          
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="flex flex-col items-center mb-8">
-              <div className="relative mb-6">
-                <img
-                  src={profile.profilePicture || "/default-avatar.png"}
-                  alt="Profile"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-violet-500"
-                />
-                <label
-                  htmlFor="profilePicture"
-                  className="absolute bottom-0 right-0 bg-violet-600 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-violet-700 transition-colors"
-                >
-                  Change
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+          <h1 className="text-4xl font-extrabold mb-8 text-indigo-600 dark:text-indigo-400 text-center">
+            Provider Dashboard
+          </h1>
+
+          <div className="flex flex-col items-center mb-8">
+            <div className="relative mb-6">
+              <img
+                src={profile.profilePicture || "/default-avatar.png"}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-600 shadow-lg"
+              />
+              <label
+                htmlFor="profilePicture"
+                className="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-indigo-700 transition"
+              >
+                Change
+              </label>
+              <input
+                type="file"
+                id="profilePicture"
+                name="profilePicture"
+                onChange={handleImageChange}
+                className="hidden"
+                accept="image/*"
+              />
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Name
                 </label>
                 <input
-                  type="file"
-                  id="profilePicture"
-                  name="profilePicture"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  accept="image/*"
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={profile.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
                 />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={profile.email}
+                  readOnly
+                  className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                />
+              </div>
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  value={profile.address}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label htmlFor="workType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Work Type
+                </label>
+                <select
+                  id="workType"
+                  name="workType"
+                  value={profile.workType}
+                  onChange={(e) => setProfile({ ...profile, workType: e.target.value })}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                >
+                  <option value="" disabled>Select work type</option>
+                  <option value="plumber">Plumber</option>
+                  <option value="electrician">Electrician</option>
+                  <option value="babysitter">Babysitter</option>
+                  <option value="cleaner">Cleaner</option>
+                </select>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={profile.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={profile.email}
-                    readOnly
-                    className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    value={profile.address}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="workType" className="block text-sm font-medium text-gray-700 mb-2">
-                    Work Type
-                  </label>
-                  <select
-                    id="workType"
-                    name="workType"
-                    value={profile.workType}
-                    onChange={(e) => setProfile({ ...profile, workType: e.target.value })}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  >
-                    <option value="" disabled>Select work type</option>
-                    <option value="plumber">Plumber</option>
-                    <option value="electrician">Electrician</option>
-                    <option value="babysitter">Babysitter</option>
-                    <option value="cleaner">Cleaner</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex justify-center mt-8">
-                <button
-                  type="submit"
-                  className="px-8 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-colors"
-                >
-                  {loading ? "Updating..." : "Update Profile"}
-                </button>
-              </div>
-            </form>
-          </div>
+            <div className="flex justify-center mt-8">
+              <button
+                type="submit"
+                className="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition"
+              >
+                {loading ? "Updating..." : "Update Profile"}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
