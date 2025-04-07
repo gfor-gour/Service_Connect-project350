@@ -69,7 +69,7 @@ export default function Search({ onSelectUser }: SearchProps) {
   return (
     <div className="flex min-h-screen bg-white text-black">
       <Sidebar />
-      <div className="flex-1 p-6 max-w-4xl mx-auto">
+      <div className="flex-1 p-6 max-w-4xl mx-auto flex flex-col items-center">
         <h1 className="text-3xl font-bold text-violet-500 mb-6 text-center">Search Users</h1>
 
         {/* Search Input */}
@@ -78,20 +78,20 @@ export default function Search({ onSelectUser }: SearchProps) {
           placeholder="Search by name, email, or work type..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full p-3 border border-violet-500 bg-white text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 mb-6"
+          className="w-full max-w-md p-3 border border-violet-500 bg-white text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 mb-6"
         />
 
         {/* Search Results */}
-        <div className="space-y-4">
+        <div className="space-y-4 w-full max-w-md">
           {results.map((user) => (
             <div
               key={user._id}
-              className={`p-5 border border-gray-300 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between cursor-pointer transition-all duration-300 hover:bg-gray-100 ${
+              className={`p-5 border border-gray-300 rounded-lg shadow-md flex flex-col items-center justify-between cursor-pointer transition-all duration-300 hover:bg-gray-100 ${
                 selectedUser?._id === user._id ? 'bg-gray-200' : ''
               }`}
               onClick={() => handleUserClick(user)}
             >
-              <div className="flex items-center mb-4 md:mb-0 md:mr-4">
+              <div className="flex items-center mb-4">
                 <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden mr-4">
                   {user.profilePicture ? (
                     <img
@@ -113,17 +113,17 @@ export default function Search({ onSelectUser }: SearchProps) {
                   )}
                 </div>
               </div>
-              <div className="flex space-x-3 w-full md:w-auto mt-4 md:mt-0">
+              <div className="flex space-x-3 w-full">
                 <button
                   onClick={() => handleMessageClick(user._id)}
-                  className="px-4 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 w-full md:w-auto"
+                  className="px-4 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 w-full"
                 >
                   Message
                 </button>
                 <button
                   onClick={() => handleBookClick(user._id)}
                   disabled={user.role !== 'provider'}
-                  className={`px-4 py-2 text-sm rounded-lg transition-all duration-300 border w-full md:w-auto ${
+                  className={`px-4 py-2 text-sm rounded-lg transition-all duration-300 border w-full ${
                     user.role === 'provider'
                       ? 'border-violet-500 text-black bg-white hover:bg-gray-100'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -138,7 +138,7 @@ export default function Search({ onSelectUser }: SearchProps) {
 
         {/* Map Component (Shows only if a user is selected) */}
         {selectedUser && (
-          <div className="mt-6 bg-gray-100 p-5 rounded-lg shadow-lg">
+          <div className="mt-6 bg-gray-100 p-5 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold text-violet-500 mb-3">Location of {selectedUser.name}</h3>
             <MapComponent address={selectedUser.address} />
           </div>

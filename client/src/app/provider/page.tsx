@@ -68,8 +68,8 @@ const ProviderPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      <div className="flex-1 lg:ml-64 flex items-center justify-center p-8">
-        <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
           <h1 className="text-4xl font-extrabold mb-8 text-indigo-600 dark:text-indigo-400 text-center">
             Provider Profile
           </h1>

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bot, Send, User } from "lucide-react";
 import axios from "axios";
+import Sidebar from "../components/Sidebar";
 
 interface Message {
   id: string;
@@ -65,10 +66,7 @@ export default function ChatBot() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar space */}
-      <div className="w-64 hidden lg:block"></div>
-
-      {/* Chatbot container */}
+      <Sidebar />
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-2xl bg-gradient-to-b from-indigo-600 via-purple-600 to-indigo-600 text-white rounded-3xl shadow-xl overflow-hidden">
           <div className="bg-indigo-700 p-4 border-b flex items-center gap-2">
