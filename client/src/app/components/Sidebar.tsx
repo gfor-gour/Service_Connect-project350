@@ -162,23 +162,22 @@ const Sidebar = () => {
           <span>Logout</span>
         </button>
       </div>
-
       {/* Mobile sidebar */}
       <div
-        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-gray-900 text-white py-8 px-4 transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-gradient-to-b from-indigo-600 via-purple-600 to-indigo-600 text-white py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 ${
           sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="h-full flex flex-col pt-12">
           <div className="mb-8 text-center">
-            <div className="w-20 h-20 rounded-full bg-gray-700 mx-auto mb-4 flex items-center justify-center">
-              <span className="text-2xl font-bold">
+            <div className="w-24 h-24 rounded-full bg-white mx-auto mb-4 flex items-center justify-center shadow-md">
+              <span className="text-3xl font-bold text-indigo-600">
                 {userName ? userName[0].toUpperCase() : "U"}
               </span>
             </div>
             <h2 className="text-xl font-semibold">{userName}</h2>
             {userRole === "provider" && workType && (
-              <p className="text-sm text-gray-400 mt-1 capitalize">
+              <p className="text-sm text-gray-200 mt-1 capitalize">
                 {workType}
               </p>
             )}
@@ -192,7 +191,7 @@ const Sidebar = () => {
                     handleDashboardClick();
                     closeSidebar();
                   }}
-                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
                 >
                   <LayoutDashboard size={20} />
                   <span>Dashboard</span>
@@ -204,7 +203,7 @@ const Sidebar = () => {
                     handleUpdateProfileClick();
                     closeSidebar();
                   }}
-                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
                 >
                   <UserCog size={20} />
                   <span>Update Profile</span>
@@ -214,7 +213,7 @@ const Sidebar = () => {
                 <Link
                   href="/search"
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
                 >
                   <Users size={20} />
                   <span>Find Users</span>
@@ -224,18 +223,17 @@ const Sidebar = () => {
                 <Link
                   href={`/messenger?userId=${localStorage.getItem("userId")}`}
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
                 >
                   <MessageSquare size={20} />
                   <span>Messenger</span>
                 </Link>
               </li>
-
               <li>
                 <Link
                   href="/services"
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
                 >
                   <Wrench size={20} />
                   <span>Services</span>
@@ -245,7 +243,7 @@ const Sidebar = () => {
                 <Link
                   href="/chatbot"
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
                 >
                   <Bot size={20} />
                   <span>AI Assistant</span>
@@ -259,7 +257,7 @@ const Sidebar = () => {
               handleLogout();
               closeSidebar();
             }}
-            className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-red-600 transition-colors mt-auto"
+            className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition mt-auto"
           >
             <LogOut size={20} />
             <span>Logout</span>
