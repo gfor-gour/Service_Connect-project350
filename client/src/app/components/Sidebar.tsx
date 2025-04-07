@@ -148,7 +148,7 @@ const Sidebar = () => {
                 className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
               >
                 <Bot size={20} />
-                <span>Chatbot</span>
+                <span>AI Assistant</span>
               </Link>
             </li>
           </ul>
@@ -248,7 +248,7 @@ const Sidebar = () => {
                   className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <Bot size={20} />
-                  <span>Chatbot</span>
+                  <span>AI Assistant</span>
                 </Link>
               </li>
             </ul>
