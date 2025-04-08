@@ -13,7 +13,7 @@ const Contact = () => {
             Contact Us
           </h1>
           <p className="text-lg md:text-2xl mb-8 max-w-3xl">
-            Have questions or need assistance? We're here to help. Reach out to us anytime!
+            Have questions or need assistance? We are here to help. Reach out to us anytime!
           </p>
         </section>
 

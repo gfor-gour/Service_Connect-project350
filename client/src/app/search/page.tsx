@@ -54,8 +54,6 @@ export default function Search() {
   const handleUserClick = (user: User) => {
       setSelectedUser(user);
     };
-  
-  // Removed unused onSelectUser function (no further action needed as it's already removed)
 
   const handleMessageClick = (userId: string) => {
     router.push(`/messenger/${userId}`);
