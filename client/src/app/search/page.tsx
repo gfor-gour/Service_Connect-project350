@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import MapComponent from '../components/MapComponent';
 import Sidebar from '../components/Sidebar';
 
@@ -16,11 +17,7 @@ interface User {
   address: string;
 }
 
-interface SearchProps {
-  onSelectUser?: (userId: string) => void;
-}
-
-export default function Search({ onSelectUser }: SearchProps) {
+export default function Search() {
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebounce(query, 300);
   const [results, setResults] = useState<User[]>([]);
@@ -55,8 +52,10 @@ export default function Search({ onSelectUser }: SearchProps) {
   }, [debouncedQuery]);
 
   const handleUserClick = (user: User) => {
-    setSelectedUser(user);
-  };
+      setSelectedUser(user);
+    };
+  
+  // Removed unused onSelectUser function (no further action needed as it's already removed)
 
   const handleMessageClick = (userId: string) => {
     router.push(`/messenger/${userId}`);
@@ -94,10 +93,12 @@ export default function Search({ onSelectUser }: SearchProps) {
               <div className="flex items-center mb-4">
                 <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden mr-4">
                   {user.profilePicture ? (
-                    <img
+                    <Image
                       src={user.profilePicture}
                       alt={user.name}
-                      className="h-full w-full object-cover"
+                      width={48}
+                      height={48}
+                      className="object-cover rounded-full"
                     />
                   ) : (
                     <span className="text-violet-500 text-lg font-semibold">
@@ -136,7 +137,7 @@ export default function Search({ onSelectUser }: SearchProps) {
           ))}
         </div>
 
-        {/* Map Component (Shows only if a user is selected) */}
+        {/* Map Component */}
         {selectedUser && (
           <div className="mt-6 bg-gray-100 p-5 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold text-violet-500 mb-3">Location of {selectedUser.name}</h3>

@@ -50,7 +50,7 @@ export default function ChatBot() {
         sender: "bot",
       };
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
