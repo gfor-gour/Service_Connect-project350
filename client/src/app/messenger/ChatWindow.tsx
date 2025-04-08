@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Send } from "lucide-react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 interface Message {
   _id: string;
@@ -22,10 +22,9 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const socketRef = useRef<any>(null);
+  const socketRef = useRef<Socket | null>(null); // Specify Socket type here
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Fetching messages on component mount and for polling updates
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -42,7 +41,7 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
 
         const data = await response.json();
         setMessages(data);
-      } catch (err) {
+      } catch  {
         setError("Failed to load messages");
       } finally {
         setLoading(false);
@@ -89,8 +88,9 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
 
       if (!response.ok) throw new Error("Failed to send message");
       setNewMessage(""); // Clear the input after sending
-    } catch (err) {
+    } catch  {
       setError("Failed to send message");
+      console.error(error); // Log the error if needed
     }
   };
 
@@ -111,7 +111,9 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
         <h2 className="font-semibold text-lg">Chat</h2>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => {
+        {loading && <div>Loading messages...</div>} {/* Show loading state */}
+        {error && <div className="text-red-500">{error}</div>} {/* Show error message */}
+        {!loading && !error && messages.map((msg) => {
           const isCurrentUser = msg.sender.email.trim().toLowerCase() === currentUserEmail.trim().toLowerCase();
           return (
             <div key={msg._id} className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
