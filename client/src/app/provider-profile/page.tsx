@@ -65,7 +65,7 @@ const ProviderProfile = () => {
         } else {
           setError("Failed to fetch profile");
         }
-      } catch (err) {
+      } catch  {
         setError("An unexpected error occurred");
       } finally {
         setLoading(false);
@@ -114,7 +114,8 @@ const ProviderProfile = () => {
       } else {
         setError("Failed to update profile");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error updating profile:", error);
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);

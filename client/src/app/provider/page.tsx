@@ -33,7 +33,8 @@ const ProviderPage = () => {
         } else {
           setError("Failed to fetch profile");
         }
-      } catch (err) {
+      } catch (error) {
+        console.error("Error fetching profile:", error);
         setError("An unexpected error occurred");
       } finally {
         setLoading(false);

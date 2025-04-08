@@ -36,7 +36,8 @@ const SignUp = () => {
         const data = await response.json();
         setError(data.message || "Failed to sign up");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error signing up:", error);
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -54,7 +55,7 @@ const SignUp = () => {
         </div>
 
         <p className="text-gray-700 dark:text-gray-300 text-center mb-6">
-          Create your account to access trusted local services. It's quick, easy, and secure!
+          Create your account to access trusted local services. It is quick, easy, and secure!
         </p>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}

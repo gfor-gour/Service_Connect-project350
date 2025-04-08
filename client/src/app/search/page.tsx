@@ -53,6 +53,8 @@ export default function Search() {
 
   const handleUserClick = (user: User) => {
       setSelectedUser(user);
+      // Example usage of onSelectUser
+      // onSelectUser(user); // Uncomment this line if you want to use the function
     };
 
   const handleMessageClick = (userId: string) => {

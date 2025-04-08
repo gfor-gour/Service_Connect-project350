@@ -79,7 +79,7 @@ const Home = () => {
                 Welcome to Our Platform!
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-6">
-                We're excited to have you here. Whether you're looking for services or offering them, let's get started on your journey!
+                We are excited to have you here. Whether you are looking for services or offering them, let us get started on your journey!
               </p>
               <div className="flex flex-col gap-4">
                 <button
