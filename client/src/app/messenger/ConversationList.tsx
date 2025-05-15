@@ -45,7 +45,7 @@ export default function ConversationList({ onSelectConversation, selectedConvers
 
         const data = await response.json()
         setConversations(data)
-      } catch (err) {
+      } catch {
         setError('Failed to load conversations')
       } finally {
         setLoading(false)

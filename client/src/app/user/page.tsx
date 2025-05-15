@@ -1,9 +1,12 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 
 const UserProfile = () => {
+  const router = useRouter();
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -32,7 +35,7 @@ const UserProfile = () => {
         } else {
           setError("Failed to fetch profile");
         }
-      } catch (err) {
+      } catch {
         setError("An unexpected error occurred");
       } finally {
         setLoading(false);
@@ -75,10 +78,12 @@ const UserProfile = () => {
             <div className="flex flex-col items-center mb-8">
               <div className="relative mb-6">
                 {profile.profilePicture ? (
-                  <img
+                  <Image
                     src={profile.profilePicture}
                     alt="Profile"
-                    className="w-32 h-32 rounded-full object-cover border-4 border-violet-500"
+                    width={128}
+                    height={128}
+                    className="rounded-full object-cover border-4 border-violet-500"
                   />
                 ) : (
                   <div className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center border-4 border-violet-500">
@@ -102,6 +107,16 @@ const UserProfile = () => {
                   <p className="text-sm font-medium text-gray-700">Address</p>
                   <p className="text-lg font-semibold text-gray-900">{profile.address || "None"}</p>
                 </div>
+              </div>
+
+              {/* Edit Profile Button */}
+              <div className="pt-6">
+                <button
+                  onClick={() => router.push("/user-profile")}
+                  className="px-6 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition duration-300"
+                >
+                  Edit Profile
+                </button>
               </div>
             </div>
           </div>

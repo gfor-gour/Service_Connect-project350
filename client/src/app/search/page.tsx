@@ -1,10 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useDebounce } from 'use-debounce';
 import { useRouter } from 'next/navigation';
-import MapComponent from '../components/MapComponent';
-import Sidebar from '../components/Sidebar';
+import Image from 'next/image';
+import Sidebar from '../components/Sidebar'; // Adjust the path based on your project structure
+
+// Dynamically import MapComponent with SSR disabled
+const MapComponent = dynamic(() => import('../components/MapComponent'), { ssr: false });
 
 interface User {
   _id: string;
@@ -16,37 +20,33 @@ interface User {
   address: string;
 }
 
-interface SearchProps {
-  onSelectUser?: (userId: string) => void;
-}
-
-export default function Search({ onSelectUser }: SearchProps) {
+export default function Search() {
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebounce(query, 300);
   const [results, setResults] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const router = useRouter();
 
-  const searchUsers = async (searchQuery: string) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/search?query=${encodeURIComponent(searchQuery)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error('Search failed');
-      const data = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error('Search error:', error);
-    }
-  };
-
   useEffect(() => {
+    const searchUsers = async (searchQuery: string) => {
+      try {
+        const token = localStorage.getItem('token'); // safe in useEffect
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/search?query=${encodeURIComponent(searchQuery)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) throw new Error('Search failed');
+        const data = await response.json();
+        setResults(data);
+      } catch (error) {
+        console.error('Search error:', error);
+      }
+    };
+
     if (debouncedQuery) {
       searchUsers(debouncedQuery);
     } else {
@@ -68,11 +68,12 @@ export default function Search({ onSelectUser }: SearchProps) {
 
   return (
     <div className="flex min-h-screen bg-white text-black">
+      {/* Sidebar component can be imported normally if it is SSR safe */}
       <Sidebar />
+
       <div className="flex-1 p-6 max-w-4xl mx-auto flex flex-col items-center">
         <h1 className="text-3xl font-bold text-violet-500 mb-6 text-center">Search Users</h1>
 
-        {/* Search Input */}
         <input
           type="text"
           placeholder="Search by name, email, or work type..."
@@ -81,7 +82,6 @@ export default function Search({ onSelectUser }: SearchProps) {
           className="w-full max-w-md p-3 border border-violet-500 bg-white text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 mb-6"
         />
 
-        {/* Search Results */}
         <div className="space-y-4 w-full max-w-md">
           {results.map((user) => (
             <div
@@ -94,10 +94,12 @@ export default function Search({ onSelectUser }: SearchProps) {
               <div className="flex items-center mb-4">
                 <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden mr-4">
                   {user.profilePicture ? (
-                    <img
+                    <Image
                       src={user.profilePicture}
                       alt={user.name}
-                      className="h-full w-full object-cover"
+                      width={48}
+                      height={48}
+                      className="object-cover rounded-full"
                     />
                   ) : (
                     <span className="text-violet-500 text-lg font-semibold">
@@ -108,9 +110,7 @@ export default function Search({ onSelectUser }: SearchProps) {
                 <div>
                   <h3 className="font-semibold text-lg text-black">{user.name}</h3>
                   <p className="text-sm text-gray-600">{user.email}</p>
-                  {user.role === 'provider' && (
-                    <p className="text-sm text-violet-500">{user.workType}</p>
-                  )}
+                  {user.role === 'provider' && <p className="text-sm text-violet-500">{user.workType}</p>}
                 </div>
               </div>
               <div className="flex space-x-3 w-full">
@@ -136,7 +136,6 @@ export default function Search({ onSelectUser }: SearchProps) {
           ))}
         </div>
 
-        {/* Map Component (Shows only if a user is selected) */}
         {selectedUser && (
           <div className="mt-6 bg-gray-100 p-5 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold text-violet-500 mb-3">Location of {selectedUser.name}</h3>

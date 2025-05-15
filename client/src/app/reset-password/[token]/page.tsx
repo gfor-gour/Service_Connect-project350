@@ -43,7 +43,8 @@ const ResetPassword = () => {
         const data = await response.json();
         setError(data.message || 'Failed to reset password');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Error resetting password:', error);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);

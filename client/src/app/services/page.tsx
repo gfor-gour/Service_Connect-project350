@@ -1,6 +1,7 @@
 "use client";
+export const dynamic = "force-dynamic";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 
@@ -30,8 +31,15 @@ function ServicesPage() {
   const fetchProviders = async (category: string) => {
     setLoading(true);
     setError(null);
+
     try {
-      const token = localStorage.getItem("token");
+      let token: string | null = null;
+
+      // Access localStorage only in the browser
+      if (typeof window !== "undefined") {
+        token = localStorage.getItem("token");
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/search?query=${category}`,
         {
@@ -109,7 +117,9 @@ function ServicesPage() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-3xl w-full p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold text-violet-700">
-                  {selectedCategory ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Providers` : "Providers"}
+                  {selectedCategory
+                    ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Providers`
+                    : "Providers"}
                 </h2>
                 <button
                   onClick={closeModal}

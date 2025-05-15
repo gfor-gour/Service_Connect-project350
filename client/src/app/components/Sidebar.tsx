@@ -20,17 +20,20 @@ const Sidebar = () => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [workType, setWorkType] = useState("");
+  const [userId, setUserId] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
+      const storedUserId = localStorage.getItem("userId");
 
-      if (token && userId) {
+      if (token && storedUserId) {
+        setUserId(storedUserId); // Set for use in messenger link
+
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${userId}`,
+            `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${storedUserId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -63,24 +66,14 @@ const Sidebar = () => {
   };
 
   const handleDashboardClick = () => {
-    if (userRole === "provider") {
-      router.push("/provider");
-    } else {
-      router.push("/user");
-    }
+    router.push(userRole === "provider" ? "/provider" : "/user");
   };
 
   const handleUpdateProfileClick = () => {
-    if (userRole === "provider") {
-      router.push("/provider-profile");
-    } else {
-      router.push("/user-profile");
-    }
+    router.push(userRole === "provider" ? "/provider-profile" : "/user-profile");
   };
 
-  const closeSidebar = () => {
-    setSidebarOpen(false);
-  };
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <>
@@ -124,15 +117,17 @@ const Sidebar = () => {
                 <span>Find Users</span>
               </Link>
             </li>
-            <li>
-              <Link
-                href={`/messenger?userId=${localStorage.getItem("userId")}`}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
-              >
-                <MessageSquare size={20} />
-                <span>Messenger</span>
-              </Link>
-            </li>
+            {userId && (
+              <li>
+                <Link
+                  href={`/messenger?userId=${userId}`}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                >
+                  <MessageSquare size={20} />
+                  <span>Messenger</span>
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 href="/services"
@@ -162,6 +157,7 @@ const Sidebar = () => {
           <span>Logout</span>
         </button>
       </div>
+
       {/* Mobile sidebar */}
       <div
         className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-gradient-to-b from-indigo-600 via-purple-600 to-indigo-600 text-white py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 ${
@@ -219,16 +215,18 @@ const Sidebar = () => {
                   <span>Find Users</span>
                 </Link>
               </li>
-              <li>
-                <Link
-                  href={`/messenger?userId=${localStorage.getItem("userId")}`}
-                  onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
-                >
-                  <MessageSquare size={20} />
-                  <span>Messenger</span>
-                </Link>
-              </li>
+              {userId && (
+                <li>
+                  <Link
+                    href={`/messenger?userId=${userId}`}
+                    onClick={closeSidebar}
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  >
+                    <MessageSquare size={20} />
+                    <span>Messenger</span>
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   href="/services"

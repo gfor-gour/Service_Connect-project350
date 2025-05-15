@@ -4,7 +4,7 @@ declare module 'nominatim-geocoder' {
       lon: string;
       display_name?: string;
       boundingbox?: [string, string, string, string];
-      [key: string]: any;
+      [key: string]: unknown;
     }
   
     interface SearchOptions {
@@ -13,7 +13,7 @@ declare module 'nominatim-geocoder' {
       limit?: number;
       addressdetails?: boolean;
       countrycodes?: string;
-      [key: string]: any;
+      [key: string]: unknown;
     }
   
     class Geocoder {

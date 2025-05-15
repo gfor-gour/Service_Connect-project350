@@ -52,7 +52,7 @@ const Login = () => {
         const data = await response.json();
         setError(data.message || "Failed to log in");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -76,7 +76,7 @@ const Login = () => {
       } else {
         alert("Failed to send reset instructions");
       }
-    } catch (err) {
+    } catch {
       alert("An error occurred. Please try again later.");
     }
   };
@@ -172,7 +172,7 @@ const Login = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Don't have an account?
+            Do not have an account?
           </p>
           <Link
             href="/signup"

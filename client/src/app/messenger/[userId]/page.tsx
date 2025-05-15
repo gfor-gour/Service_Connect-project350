@@ -28,7 +28,7 @@ export default function UserChat() {
         
         const data = await response.json()
         setConversationId(data._id)
-      } catch (err) {
+      } catch {
         setError('Failed to load conversation')
       } finally {
         setLoading(false)

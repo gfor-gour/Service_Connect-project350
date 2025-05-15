@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
@@ -33,7 +34,8 @@ const ProviderPage = () => {
         } else {
           setError("Failed to fetch profile");
         }
-      } catch (err) {
+      } catch (error) {
+        console.error("Error fetching profile:", error);
         setError("An unexpected error occurred");
       } finally {
         setLoading(false);

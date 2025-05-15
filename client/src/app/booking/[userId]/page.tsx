@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import Sidebar from "../../components/Sidebar";
 
 interface Provider {
@@ -23,82 +24,90 @@ interface Booking {
   paymentStatus: string;
 }
 
+interface UserDetails {
+  name: string;
+  address: string;
+}
+
 export default function BookingPage() {
   const { userId } = useParams();
   const [provider, setProvider] = useState<Provider | null>(null);
   const [description, setDescription] = useState("");
   const [bookingStatus, setBookingStatus] = useState<string>("Pending");
-  const [bookingId, setBookingId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [bookingHistory, setBookingHistory] = useState<Booking[]>([]);
-  const [userDetails, setUserDetails] = useState<any>(null); // To store user details (name, address, etc.)
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 
   useEffect(() => {
-    fetchProviderDetails();
-    fetchBookingHistory();
-    fetchUserDetails();
-  }, []);
+    const fetchData = async () => {
+      const fetchProviderDetails = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${userId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
 
-  const fetchProviderDetails = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+          if (!response.ok) throw new Error("Failed to fetch provider details");
+          const data = await response.json();
+          setProvider(data);
+        } catch (error) {
+          console.error("Error fetching provider details:", error);
         }
-      );
+      };
 
-      if (!response.ok) throw new Error("Failed to fetch provider details");
-      const data = await response.json();
-      setProvider(data);
-    } catch (error) {
-      console.error("Error fetching provider details:", error);
-    }
-  };
+      const fetchBookingHistory = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const currentUserId = localStorage.getItem("userId");
 
-  const fetchBookingHistory = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const currentUserId = localStorage.getItem("userId");
+          if (!currentUserId) return;
 
-      if (!currentUserId) return;
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/bookings/user/${currentUserId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/bookings/user/${currentUserId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+          if (!response.ok) throw new Error("Failed to fetch booking history");
+
+          const data = await response.json();
+          setBookingHistory(data);
+        } catch (error) {
+          console.error("Error fetching booking history:", error);
         }
-      );
+      };
 
-      if (!response.ok) throw new Error("Failed to fetch booking history");
+      const fetchUserDetails = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const currentUserId = localStorage.getItem("userId");
 
-      const data = await response.json();
-      setBookingHistory(data);
-    } catch (error) {
-      console.error("Error fetching booking history:", error);
-    }
-  };
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${currentUserId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
 
-  const fetchUserDetails = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const currentUserId = localStorage.getItem("userId");
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/users/${currentUserId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+          if (!response.ok) throw new Error("Failed to fetch user details");
+          const data = await response.json();
+          setUserDetails(data);
+        } catch (error) {
+          console.error("Error fetching user details:", error);
         }
-      );
+      };
 
-      if (!response.ok) throw new Error("Failed to fetch user details");
-      const data = await response.json();
-      setUserDetails(data);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
+      await fetchProviderDetails();
+      await fetchBookingHistory();
+      await fetchUserDetails();
+    };
+
+    fetchData();
+  }, [userId]);
 
   const handleBookingRequest = async () => {
     try {
@@ -134,9 +143,8 @@ export default function BookingPage() {
         throw new Error(data.message || "Failed to send booking request");
 
       alert("Booking request sent successfully!");
-      setBookingHistory((prev) => [...prev, data.booking]); // Update booking history
+      setBookingHistory((prev) => [...prev, data.booking]);
       setBookingStatus("Booked");
-      setBookingId(data.booking._id);
     } catch (error) {
       console.error("Error sending booking request:", error);
       alert("Failed to send booking request!");
@@ -155,12 +163,11 @@ export default function BookingPage() {
       const token = localStorage.getItem("token");
       const currentUserId = localStorage.getItem("userId");
 
-      // Initialize payment by calling the payment gateway API
       const paymentData = {
         userId: currentUserId,
         price: booking.price,
-        address: userDetails?.address, // User address from user history
-        name: userDetails?.name, // User name from user history
+        address: userDetails?.address,
+        name: userDetails?.name,
         bookingId: booking._id,
       };
 
@@ -180,9 +187,7 @@ export default function BookingPage() {
       if (!response.ok)
         throw new Error(data.message || "Failed to initiate payment");
 
-      // Check if the response contains a redirect URL
       if (data.url) {
-        // Redirect the user to the payment gateway
         window.location.href = data.url;
       } else {
         alert("Payment initiation failed. No redirect URL received.");
@@ -195,7 +200,7 @@ export default function BookingPage() {
 
   const handleCashOnDelivery = (booking: Booking) => {
     alert(`Cash on Delivery selected for Booking ID: ${booking._id}`);
-    // Implement COD logic, update status if needed
+    // Implement COD logic
   };
 
   return (
@@ -212,10 +217,12 @@ export default function BookingPage() {
               <div className="flex items-center mb-8">
                 <div className="h-20 w-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden mr-6 shadow-md">
                   {provider.profilePicture ? (
-                    <img
+                    <Image
                       src={provider.profilePicture}
                       alt={provider.name}
-                      className="h-full w-full object-cover"
+                      width={80}
+                      height={80}
+                      className="h-full w-full object-cover rounded-full"
                     />
                   ) : (
                     <span className="text-indigo-600 dark:text-indigo-400 text-3xl font-bold">
@@ -256,10 +263,11 @@ export default function BookingPage() {
               </button>
             </div>
           ) : (
-            <p className="text-center text-gray-600 dark:text-gray-400">Loading provider information...</p>
+            <p className="text-center text-gray-600 dark:text-gray-400">
+              Loading provider information...
+            </p>
           )}
 
-          {/* Booking History */}
           {bookingHistory.length > 0 && (
             <div className="mt-8">
               <h2 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-6">
@@ -292,7 +300,6 @@ export default function BookingPage() {
                       Payment Status: {booking.paymentStatus}
                     </p>
 
-                    {/* Payment Options */}
                     {booking.status === "accepted" &&
                       booking.paymentStatus !== "success" &&
                       booking.price && (

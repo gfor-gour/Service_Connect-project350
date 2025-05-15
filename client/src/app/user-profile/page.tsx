@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
@@ -66,7 +66,7 @@ const UserProfile = () => {
         } else {
           setError("Failed to fetch profile");
         }
-      } catch (err) {
+      } catch  {
         setError("An unexpected error occurred");
       } finally {
         setLoading(false);
@@ -115,7 +115,8 @@ const UserProfile = () => {
       } else {
         setError("Failed to update profile");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error updating profile:", error);
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);

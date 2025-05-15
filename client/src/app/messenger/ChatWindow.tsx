@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Send } from "lucide-react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 interface Message {
   _id: string;
@@ -22,7 +22,7 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const socketRef = useRef<any>(null);
+  const socketRef = useRef<Socket | null>(null); // Specify Socket type here
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
 
         const data = await response.json();
         setMessages(data);
-      } catch (err) {
+      } catch  {
         setError("Failed to load messages");
       } finally {
         setLoading(false);
@@ -52,11 +52,24 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
 
     socketRef.current = io(process.env.NEXT_PUBLIC_APP_BACKEND_URL as string, { query: { conversationId } });
     socketRef.current.on("receive message", (message: Message) => {
-      setMessages((prev) => [...prev, message]);
+      setMessages((prev) => [...prev, message]); // Add new message to the list
     });
 
-    return () => socketRef.current?.disconnect();
+    // Auto-poll every 5 seconds for new messages (fallback mechanism)
+    const pollInterval = setInterval(fetchMessages, 5000); // Poll every 5 seconds
+
+    return () => {
+      socketRef.current?.disconnect();
+      clearInterval(pollInterval); // Clear polling when component unmounts
+    };
   }, [conversationId]);
+
+  // Scroll to bottom when messages are updated
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,9 +87,10 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
       );
 
       if (!response.ok) throw new Error("Failed to send message");
-      setNewMessage("");
-    } catch (err) {
+      setNewMessage(""); // Clear the input after sending
+    } catch  {
       setError("Failed to send message");
+      console.error(error); // Log the error if needed
     }
   };
 
@@ -89,7 +103,6 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
   };
 
   return (
-  
     <div className="flex flex-col h-screen bg-gray-100">
       <div className="bg-white flex items-center p-4 border-b border-gray-200">
         <button onClick={onBack} className="mr-2 text-gray-600 hover:text-gray-900">
@@ -98,8 +111,9 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
         <h2 className="font-semibold text-lg">Chat</h2>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => {
-          console.log(currentUserEmail.trim().toLowerCase());
+        {loading && <div>Loading messages...</div>} {/* Show loading state */}
+        {error && <div className="text-red-500">{error}</div>} {/* Show error message */}
+        {!loading && !error && messages.map((msg) => {
           const isCurrentUser = msg.sender.email.trim().toLowerCase() === currentUserEmail.trim().toLowerCase();
           return (
             <div key={msg._id} className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
