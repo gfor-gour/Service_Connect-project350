@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import React, { useState, useRef, useEffect } from "react";
 import { Bot, Send, User } from "lucide-react";
@@ -23,7 +24,6 @@ export default function ChatBot() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom whenever messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -42,7 +42,10 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/generate`, { question: input });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/generate`,
+        { question: input }
+      );
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),

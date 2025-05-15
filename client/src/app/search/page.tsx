@@ -1,11 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useDebounce } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import MapComponent from '../components/MapComponent';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/Sidebar'; // Adjust the path based on your project structure
+
+// Dynamically import MapComponent with SSR disabled
+const MapComponent = dynamic(() => import('../components/MapComponent'), { ssr: false });
 
 interface User {
   _id: string;
@@ -24,26 +27,26 @@ export default function Search() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const router = useRouter();
 
-  const searchUsers = async (searchQuery: string) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/search?query=${encodeURIComponent(searchQuery)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error('Search failed');
-      const data = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error('Search error:', error);
-    }
-  };
-
   useEffect(() => {
+    const searchUsers = async (searchQuery: string) => {
+      try {
+        const token = localStorage.getItem('token'); // safe in useEffect
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/search?query=${encodeURIComponent(searchQuery)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) throw new Error('Search failed');
+        const data = await response.json();
+        setResults(data);
+      } catch (error) {
+        console.error('Search error:', error);
+      }
+    };
+
     if (debouncedQuery) {
       searchUsers(debouncedQuery);
     } else {
@@ -52,10 +55,8 @@ export default function Search() {
   }, [debouncedQuery]);
 
   const handleUserClick = (user: User) => {
-      setSelectedUser(user);
-      // Example usage of onSelectUser
-      // onSelectUser(user); // Uncomment this line if you want to use the function
-    };
+    setSelectedUser(user);
+  };
 
   const handleMessageClick = (userId: string) => {
     router.push(`/messenger/${userId}`);
@@ -67,11 +68,12 @@ export default function Search() {
 
   return (
     <div className="flex min-h-screen bg-white text-black">
+      {/* Sidebar component can be imported normally if it is SSR safe */}
       <Sidebar />
+
       <div className="flex-1 p-6 max-w-4xl mx-auto flex flex-col items-center">
         <h1 className="text-3xl font-bold text-violet-500 mb-6 text-center">Search Users</h1>
 
-        {/* Search Input */}
         <input
           type="text"
           placeholder="Search by name, email, or work type..."
@@ -80,7 +82,6 @@ export default function Search() {
           className="w-full max-w-md p-3 border border-violet-500 bg-white text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 mb-6"
         />
 
-        {/* Search Results */}
         <div className="space-y-4 w-full max-w-md">
           {results.map((user) => (
             <div
@@ -109,9 +110,7 @@ export default function Search() {
                 <div>
                   <h3 className="font-semibold text-lg text-black">{user.name}</h3>
                   <p className="text-sm text-gray-600">{user.email}</p>
-                  {user.role === 'provider' && (
-                    <p className="text-sm text-violet-500">{user.workType}</p>
-                  )}
+                  {user.role === 'provider' && <p className="text-sm text-violet-500">{user.workType}</p>}
                 </div>
               </div>
               <div className="flex space-x-3 w-full">
@@ -137,7 +136,6 @@ export default function Search() {
           ))}
         </div>
 
-        {/* Map Component */}
         {selectedUser && (
           <div className="mt-6 bg-gray-100 p-5 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold text-violet-500 mb-3">Location of {selectedUser.name}</h3>

@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
