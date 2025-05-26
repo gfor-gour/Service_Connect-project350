@@ -204,18 +204,18 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-white">
       <Sidebar />
       <div className="flex-1 lg:ml-64 p-8">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-extrabold mb-8 text-indigo-600 dark:text-indigo-400">
+          <h1 className="text-4xl font-extrabold mb-8 text-gray-800">
             Book Provider
           </h1>
-
+  
           {provider ? (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+            <div className="bg-white dark:bg-white rounded-2xl shadow-lg p-8">
               <div className="flex items-center mb-8">
-                <div className="h-20 w-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden mr-6 shadow-md">
+                <div className="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mr-6 shadow-md">
                   {provider.profilePicture ? (
                     <Image
                       src={provider.profilePicture}
@@ -225,35 +225,33 @@ export default function BookingPage() {
                       className="h-full w-full object-cover rounded-full"
                     />
                   ) : (
-                    <span className="text-indigo-600 dark:text-indigo-400 text-3xl font-bold">
+                    <span className="text-gray-800 text-3xl font-bold">
                       {provider.name.charAt(0)}
                     </span>
                   )}
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                  <h3 className="text-xl font-semibold text-gray-800">
                     {provider.name}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">{provider.email}</p>
+                  <p className="text-gray-600">{provider.email}</p>
                   {provider.workType && (
-                    <p className="text-sm text-indigo-600 dark:text-indigo-400">
-                      {provider.workType}
-                    </p>
+                    <p className="text-sm text-gray-700">{provider.workType}</p>
                   )}
                 </div>
               </div>
-
+  
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 p-3 rounded-lg mb-6 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                className="w-full border border-gray-300 p-3 rounded-lg mb-6 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                 placeholder="Enter booking details..."
               />
-
+  
               <button
                 onClick={handleBookingRequest}
                 disabled={bookingStatus === "Booked" || isProcessing}
-                className="bg-indigo-600 text-white px-6 py-3 rounded-lg w-full hover:bg-indigo-700 transition"
+                className="bg-gray-800 text-white px-6 py-3 rounded-lg w-full hover:bg-gray-900 transition"
               >
                 {isProcessing
                   ? "Processing..."
@@ -263,21 +261,19 @@ export default function BookingPage() {
               </button>
             </div>
           ) : (
-            <p className="text-center text-gray-600 dark:text-gray-400">
-              Loading provider information...
-            </p>
+            <p className="text-center text-gray-600">Loading provider information...</p>
           )}
-
+  
           {bookingHistory.length > 0 && (
             <div className="mt-8">
-              <h2 className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-6">
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">
                 Booking History
               </h2>
               <div className="space-y-4">
                 {bookingHistory.map((booking) => (
                   <div
                     key={booking._id}
-                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-lg shadow-md"
+                    className="bg-white border border-gray-200 p-6 rounded-lg shadow-md"
                   >
                     <p>
                       <strong>Provider:</strong> {booking.providerId.name}
@@ -293,13 +289,13 @@ export default function BookingPage() {
                         <strong>Price:</strong> {booking.price} BDT
                       </p>
                     )}
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500">
                       {new Date(booking.createdAt).toLocaleString()}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500">
                       Payment Status: {booking.paymentStatus}
                     </p>
-
+  
                     {booking.status === "accepted" &&
                       booking.paymentStatus !== "success" &&
                       booking.price && (
@@ -313,7 +309,7 @@ export default function BookingPage() {
                           <button
                             onClick={() => handlePayment(booking)}
                             disabled={booking.paymentStatus === "success"}
-                            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+                            className="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900 transition"
                           >
                             Pay {booking.price} BDT
                           </button>
@@ -328,4 +324,5 @@ export default function BookingPage() {
       </div>
     </div>
   );
+  
 }

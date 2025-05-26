@@ -70,7 +70,9 @@ const Sidebar = () => {
   };
 
   const handleUpdateProfileClick = () => {
-    router.push(userRole === "provider" ? "/provider-profile" : "/user-profile");
+    router.push(
+      userRole === "provider" ? "/provider-profile" : "/user-profile"
+    );
   };
 
   const closeSidebar = () => setSidebarOpen(false);
@@ -151,9 +153,9 @@ const Sidebar = () => {
 
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition mt-auto"
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-red-600 border border-red-600 hover:bg-red-100 transition mt-auto"
         >
-          <LogOut size={20} />
+          <LogOut size={20} className="text-red-600" />
           <span>Logout</span>
         </button>
       </div>
@@ -255,7 +257,7 @@ const Sidebar = () => {
               handleLogout();
               closeSidebar();
             }}
-            className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition mt-auto"
+            className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-red-600 border border-red-600 hover:bg-red-100 transition mt-auto"
           >
             <LogOut size={20} />
             <span>Logout</span>

@@ -129,7 +129,7 @@ const ProviderProfile = () => {
       <div className="flex min-h-screen">
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-gray-800"></div>
         </div>
       </div>
     );
@@ -145,26 +145,25 @@ const ProviderProfile = () => {
       </div>
     );
   }
-
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-white">
       <Sidebar />
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-          <h1 className="text-4xl font-extrabold mb-8 text-indigo-600 dark:text-indigo-400 text-center">
+        <div className="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <h1 className="text-4xl font-extrabold mb-8 text-gray-800 text-center">
             Provider Dashboard
           </h1>
-
+  
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-6">
               <img
                 src={profile.profilePicture || "/default-avatar.png"}
                 alt="Profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-600 shadow-lg"
+                className="w-32 h-32 rounded-full object-cover border-4 border-gray-800 shadow-lg"
               />
               <label
                 htmlFor="profilePicture"
-                className="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-indigo-700 transition"
+                className="absolute bottom-0 right-0 bg-gray-800 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-gray-700 transition"
               >
                 Change
               </label>
@@ -178,11 +177,11 @@ const ProviderProfile = () => {
               />
             </div>
           </div>
-
+  
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-2">
                   Name
                 </label>
                 <input
@@ -191,11 +190,11 @@ const ProviderProfile = () => {
                   name="name"
                   value={profile.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-800 mb-2">
                   Email
                 </label>
                 <input
@@ -204,11 +203,11 @@ const ProviderProfile = () => {
                   name="email"
                   value={profile.email}
                   readOnly
-                  className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                  className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-800 text-gray-800"
                 />
               </div>
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="address" className="block text-sm font-medium text-gray-800 mb-2">
                   Address
                 </label>
                 <input
@@ -217,11 +216,11 @@ const ProviderProfile = () => {
                   name="address"
                   value={profile.address}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                 />
               </div>
               <div>
-                <label htmlFor="workType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="workType" className="block text-sm font-medium text-gray-800 mb-2">
                   Work Type
                 </label>
                 <select
@@ -229,7 +228,7 @@ const ProviderProfile = () => {
                   name="workType"
                   value={profile.workType}
                   onChange={(e) => setProfile({ ...profile, workType: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
                 >
                   <option value="" disabled>Select work type</option>
                   <option value="plumber">Plumber</option>
@@ -239,11 +238,11 @@ const ProviderProfile = () => {
                 </select>
               </div>
             </div>
-
+  
             <div className="flex justify-center mt-8">
               <button
                 type="submit"
-                className="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition"
+                className="px-8 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:bg-gray-600 focus:ring-offset-2 transition"
               >
                 {loading ? "Updating..." : "Update Profile"}
               </button>
@@ -253,6 +252,6 @@ const ProviderProfile = () => {
       </div>
     </div>
   );
-};
+};  
 
 export default ProviderProfile;

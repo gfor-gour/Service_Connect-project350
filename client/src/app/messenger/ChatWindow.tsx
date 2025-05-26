@@ -117,7 +117,7 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
           const isCurrentUser = msg.sender.email.trim().toLowerCase() === currentUserEmail.trim().toLowerCase();
           return (
             <div key={msg._id} className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
-              <div className={`p-3 rounded-lg ${isCurrentUser ? "bg-blue-500 text-white" : "bg-gray-300 text-black"}`}>
+              <div className={`p-3 rounded-lg ${isCurrentUser ? "bg-gray-800 text-white" : "bg-gray-300 text-black"}`}>
                 {msg.content}
                 <div className="text-xs text-gray-500 mt-1">{formatTime(msg.createdAt)}</div>
               </div>
@@ -133,7 +133,7 @@ export default function ChatWindow({ conversationId, onBack, currentUserEmail }:
           onChange={(e) => setNewMessage(e.target.value)}
           className="flex-1 p-2 border border-gray-300 rounded-full"
         />
-        <button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded-full">
+        <button type="submit" className="ml-2 p-2 bg-gray-800 text-white rounded-full">
           <Send className="h-5 w-5" />
         </button>
       </form>

@@ -165,15 +165,6 @@ export default function ReviewsPage() {
     }
   }
 
-  const handleEditReview = (review: Review) => {
-    setEditingReview(review)
-    setNewReview({
-      rating: review.rating,
-      comment: review.comment,
-    })
-    setShowReviewForm(true)
-  }
-
   const handleDeleteReview = async (reviewId: string) => {
     if (!confirm("Are you sure you want to delete this review?")) return
 
@@ -225,14 +216,14 @@ export default function ReviewsPage() {
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
         <div className="flex-1 p-6 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-white">
       <Sidebar />
       <div className="flex-1 p-6 max-w-4xl mx-auto">
         {/* Provider Header */}
@@ -249,15 +240,17 @@ export default function ReviewsPage() {
                     className="object-cover rounded-full"
                   />
                 ) : (
-                  <span className="text-violet-500 text-xl font-semibold">{provider.name.charAt(0)}</span>
+                  <span className="text-gray-800 text-xl font-semibold">
+                    {provider.name.charAt(0)}
+                  </span>
                 )}
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">{provider.name}</h1>
-                <p className="text-violet-500">{provider.workType}</p>
+                <p className="text-gray-800">{provider.workType}</p>
                 <div className="flex items-center space-x-2 mt-2">
                   {renderStars(Math.round(averageRating))}
-                  <span className="text-gray-600">
+                  <span className="text-gray-800">
                     {averageRating.toFixed(1)} ({totalReviews} reviews)
                   </span>
                 </div>
@@ -265,39 +258,43 @@ export default function ReviewsPage() {
             </div>
           </div>
         )}
-
+  
         {/* Add Review Section */}
         {canReview && currentUserId !== userId && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">Write a Review</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Write a Review</h2>
             {!showReviewForm ? (
               <button
                 onClick={() => setShowReviewForm(true)}
-                className="bg-violet-500 text-white px-4 py-2 rounded-lg hover:bg-violet-600"
+                className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
               >
                 Add Review
               </button>
             ) : (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
-                  {renderStars(newReview.rating, true, (rating) => setNewReview((prev) => ({ ...prev, rating })))}
+                  <label className="block text-sm font-medium text-gray-800 mb-2">Rating</label>
+                  {renderStars(newReview.rating, true, (rating) =>
+                    setNewReview((prev) => ({ ...prev, rating }))
+                  )}
                 </div>
-
+  
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Comment</label>
+                  <label className="block text-sm font-medium text-gray-800 mb-2">Comment</label>
                   <textarea
                     value={newReview.comment}
-                    onChange={(e) => setNewReview((prev) => ({ ...prev, comment: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 h-24"
+                    onChange={(e) =>
+                      setNewReview((prev) => ({ ...prev, comment: e.target.value }))
+                    }
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 h-24 text-gray-800"
                     placeholder="Share your experience..."
                   />
                 </div>
-
+  
                 <div className="flex space-x-3">
                   <button
                     onClick={handleSubmitReview}
-                    className="bg-violet-500 text-white px-4 py-2 rounded-lg hover:bg-violet-600"
+                    className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
                   >
                     {editingReview ? "Update Review" : "Submit Review"}
                   </button>
@@ -307,7 +304,7 @@ export default function ReviewsPage() {
                       setEditingReview(null)
                       setNewReview({ rating: 5, comment: "" })
                     }}
-                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400"
+                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400"
                   >
                     Cancel
                   </button>
@@ -316,10 +313,10 @@ export default function ReviewsPage() {
             )}
           </div>
         )}
-
+  
         {/* Reviews List */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Reviews ({totalReviews})</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Reviews ({totalReviews})</h2>
           {reviews.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No reviews yet</p>
           ) : (
@@ -337,7 +334,9 @@ export default function ReviewsPage() {
                           className="object-cover rounded-full"
                         />
                       ) : (
-                        <span className="text-violet-500 text-sm font-semibold">{review.userId.name.charAt(0)}</span>
+                        <span className="text-gray-800 text-sm font-semibold">
+                          {review.userId.name.charAt(0)}
+                        </span>
                       )}
                     </div>
                     <div className="flex-1">
@@ -345,28 +344,22 @@ export default function ReviewsPage() {
                         <div className="flex items-center space-x-2">
                           <h4 className="font-semibold text-gray-800">{review.userId.name}</h4>
                           {renderStars(review.rating)}
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-gray-600">
                             {new Date(review.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         {review.userId._id === currentUserId && (
                           <div className="flex space-x-2">
                             <button
-                              onClick={() => handleEditReview(review)}
-                              className="text-blue-500 hover:text-blue-700"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </button>
-                            <button
                               onClick={() => handleDeleteReview(review._id)}
-                              className="text-red-500 hover:text-red-700"
+                              className="text-red-800 hover:text-red-600"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
                         )}
                       </div>
-                      <p className="text-gray-700">{review.comment}</p>
+                      <p className="text-gray-800">{review.comment}</p>
                     </div>
                   </div>
                 </div>
@@ -377,4 +370,5 @@ export default function ReviewsPage() {
       </div>
     </div>
   )
+  
 }

@@ -87,27 +87,27 @@ export default function Search() {
   return (
     <div className="flex min-h-screen bg-white text-black">
       <Sidebar />
-
+  
       <div className="flex-1 p-6 max-w-4xl mx-auto flex flex-col items-center">
-        <h1 className="text-3xl font-bold text-violet-500 mb-6 text-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Search Users
         </h1>
-
+  
         <div className="relative w-full max-w-md mb-6">
           <input
             type="text"
             placeholder="Search by name, email, or work type..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full p-3 border border-violet-500 bg-white text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full p-3 border border-gray-800 bg-white text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
           {searchLoading && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-violet-500"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-800"></div>
             </div>
           )}
         </div>
-
+  
         <div className="space-y-4 w-full max-w-md">
           {results.map((user) => (
             <div
@@ -128,7 +128,7 @@ export default function Search() {
                       className="object-cover rounded-full"
                     />
                   ) : (
-                    <span className="text-violet-500 text-lg font-semibold">
+                    <span className="text-gray-800 text-lg font-semibold">
                       {user.name ? user.name.charAt(0) : "?"}
                     </span>
                   )}
@@ -139,14 +139,14 @@ export default function Search() {
                   </h3>
                   <p className="text-sm text-gray-600">{user.email}</p>
                   {user.role === "provider" && (
-                    <p className="text-sm text-violet-500">{user.workType}</p>
+                    <p className="text-sm text-gray-800">{user.workType}</p>
                   )}
                 </div>
               </div>
               <div className="flex space-x-2 w-full">
                 <button
                   onClick={(e) => handleMessageClick(e, user._id)}
-                  className="px-3 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 flex-1 transition-colors"
+                  className="px-3 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-900 flex-1 transition-colors"
                 >
                   Message
                 </button>
@@ -155,7 +155,7 @@ export default function Search() {
                   disabled={user.role !== "provider"}
                   className={`px-3 py-2 text-sm rounded-lg transition-all duration-300 border flex-1 ${
                     user.role === "provider"
-                      ? "border-violet-500 text-black bg-white hover:bg-gray-100"
+                      ? "border-gray-800 text-black bg-white hover:bg-gray-100"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                 >
@@ -166,7 +166,7 @@ export default function Search() {
                   disabled={user.role !== "provider"}
                   className={`px-3 py-2 text-sm rounded-lg flex-1 transition-all duration-300 ${
                     user.role === "provider"
-                      ? "bg-green-500 text-white hover:bg-green-600"
+                      ? "bg-gray-800 text-white hover:bg-gray-900"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                 >
@@ -176,16 +176,16 @@ export default function Search() {
             </div>
           ))}
         </div>
-
+  
         {results.length === 0 && debouncedQuery && !searchLoading && (
           <div className="text-center text-gray-500 mt-8">
             <p>No users found for &quot;{debouncedQuery}&quot;</p>
           </div>
         )}
-
+  
         {selectedUser && (
           <div className="mt-6 bg-gray-100 p-5 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="text-xl font-semibold text-violet-500 mb-3">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">
               Location of {selectedUser.name}
             </h3>
             <MapComponent address={selectedUser.address} />
@@ -194,4 +194,5 @@ export default function Search() {
       </div>
     </div>
   );
+  
 }
