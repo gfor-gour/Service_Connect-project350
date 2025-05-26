@@ -50,8 +50,6 @@ const ProviderPage = () => {
         if (response.ok) {
           const data = await response.json();
           setProfile(data);
-
-          // Fetch reviews for this provider
           await fetchReviews(data._id || localStorage.getItem("userId"));
         } else {
           setError("Failed to fetch profile");
@@ -110,10 +108,10 @@ const ProviderPage = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen bg-white text-gray-800">
         <Sidebar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-violet-500"></div>
+        <div className="flex-1 ml-64 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-gray-800"></div>
         </div>
       </div>
     );
@@ -121,9 +119,9 @@ const ProviderPage = () => {
 
   if (error) {
     return (
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen bg-white text-gray-800">
         <Sidebar />
-        <div className="flex-1 flex items-center justify-center text-red-500">
+        <div className="flex-1 ml-64 flex items-center justify-center text-red-500">
           {error}
         </div>
       </div>
@@ -131,13 +129,13 @@ const ProviderPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-white text-gray-800">
       <Sidebar />
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 ml-64">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Profile Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-            <h1 className="text-4xl font-extrabold mb-8 text-indigo-600 dark:text-indigo-400 text-center">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h1 className="text-4xl font-extrabold mb-8 text-gray-800 text-center">
               Provider Profile
             </h1>
 
@@ -147,58 +145,59 @@ const ProviderPage = () => {
                   <img
                     src={profile.profilePicture || "/placeholder.svg"}
                     alt="Profile"
-                    className="w-32 h-32 rounded-full object-cover border-4 border-indigo-600 shadow-lg"
+                    className="w-32 h-32 rounded-full object-cover border-4 border-gray-800 shadow-lg"
                   />
                 ) : (
-                  <div className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center border-4 border-indigo-600 shadow-lg">
-                    <span className="text-gray-500">No Image</span>
+                  <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-800 shadow-lg">
+                    <span className="text-4xl font-bold text-gray-800">
+                      {profile.name ? profile.name[0].toUpperCase() : "U"}
+                    </span>
                   </div>
                 )}
               </div>
-              <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
                 {profile.name || "Your Name"}
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {profile.email || "Your Email"}
-              </p>
+              <p className="text-gray-600 mb-4">{profile.email || "Your Email"}</p>
 
               {/* Rating Summary */}
-              <div className="text-center">
+              <div className="text-center mb-8">
                 <div className="flex items-center justify-center space-x-2 mb-2">
                   {renderStars(Math.round(averageRating))}
-                  <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="text-lg font-semibold text-gray-800">
                     {averageRating.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500">
                   {totalReviews} total reviews
                 </p>
               </div>
+
+              {/* Work Type and Address */}
+              <div className="w-full max-w-2xl space-y-4">
+                <div className="bg-gray-50 p-6 rounded-xl shadow-sm">
+                  <p className="text-sm font-medium text-gray-500 mb-2">
+                    Work Type
+                  </p>
+                  <p className="text-xl font-semibold text-gray-800 capitalize">
+                    {profile.workType || "Not Specified"}
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-xl shadow-sm">
+                  <p className="text-sm font-medium text-gray-500 mb-2">
+                    Address
+                  </p>
+                  <p className="text-xl font-semibold text-gray-800">
+                    {profile.address || "Not Provided"}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Address
-                </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-gray-200">
-                  {profile.address || "Not Provided"}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Work Type
-                </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-gray-200 capitalize">
-                  {profile.workType || "Not Specified"}
-                </p>
-              </div>
-            </div>
-
-            <div className="text-center">
+            <div className="text-center mt-8">
               <button
                 onClick={() => (window.location.href = "/provider-profile")}
-                className="px-6 py-3 text-lg font-bold text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition"
+                className="px-8 py-3 text-lg font-bold text-white bg-gray-800 rounded-xl shadow-md hover:bg-gray-700 transition duration-200"
               >
                 Edit Profile
               </button>
@@ -206,31 +205,29 @@ const ProviderPage = () => {
           </div>
 
           {/* Reviews Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 Customer Reviews
               </h2>
 
               {/* Rating Summary Card */}
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-lg p-6 mb-6">
+              <div className="bg-gray-50 rounded-xl p-6 mb-6 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center space-x-3 mb-2">
                       {renderStars(Math.round(averageRating))}
-                      <span className="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                      <span className="text-3xl font-bold text-gray-800">
                         {averageRating.toFixed(1)}
                       </span>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-gray-600">
                       Based on {totalReviews} reviews
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Overall Rating
-                    </p>
-                    <p className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">
+                    <p className="text-sm text-gray-500">Overall Rating</p>
+                    <p className="text-xl font-semibold text-gray-800">
                       {averageRating > 4.5
                         ? "Excellent"
                         : averageRating > 3.5
@@ -249,17 +246,17 @@ const ProviderPage = () => {
             {/* Reviews List */}
             {reviewsLoading ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800"></div>
               </div>
             ) : reviews.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <Star className="h-16 w-16 mx-auto" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">
                   No reviews yet
                 </h3>
-                <p className="text-gray-500 dark:text-gray-500">
+                <p className="text-gray-500">
                   When customers leave reviews about your services, they&apos;ll
                   appear here.
                 </p>
@@ -269,10 +266,10 @@ const ProviderPage = () => {
                 {reviews.map((review) => (
                   <div
                     key={review._id}
-                    className="border border-gray-200 dark:border-gray-600 rounded-lg p-6 hover:shadow-md transition-shadow bg-gray-50 dark:bg-gray-700"
+                    className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow bg-gray-50"
                   >
                     <div className="flex items-start space-x-4">
-                      <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {review.userId.profilePicture ? (
                           <Image
                             src={
@@ -284,7 +281,7 @@ const ProviderPage = () => {
                             className="object-cover rounded-full"
                           />
                         ) : (
-                          <span className="text-indigo-600 text-lg font-semibold">
+                          <span className="text-gray-800 text-lg font-semibold">
                             {review.userId.name.charAt(0)}
                           </span>
                         )}
@@ -292,12 +289,12 @@ const ProviderPage = () => {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <div>
-                            <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                            <h4 className="font-semibold text-gray-800">
                               {review.userId.name}
                             </h4>
                             <div className="flex items-center space-x-2 mt-1">
                               {renderStars(review.rating)}
-                              <span className="text-sm text-gray-500 dark:text-gray-400">
+                              <span className="text-sm text-gray-500">
                                 {new Date(review.createdAt).toLocaleDateString(
                                   "en-US",
                                   {
@@ -310,7 +307,7 @@ const ProviderPage = () => {
                             </div>
                           </div>
                         </div>
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <p className="text-gray-700 leading-relaxed">
                           {review.comment}
                         </p>
                       </div>
