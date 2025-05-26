@@ -79,6 +79,11 @@ export default function Search() {
     router.push(`/booking/${userId}`);
   };
 
+  const handleReviewClick = (e: React.MouseEvent, userId: string) => {
+    e.stopPropagation();
+    router.push(`/reviews/${userId}`);
+  };
+
   return (
     <div className="flex min-h-screen bg-white text-black">
       <Sidebar />
@@ -138,23 +143,34 @@ export default function Search() {
                   )}
                 </div>
               </div>
-              <div className="flex space-x-3 w-full">
+              <div className="flex space-x-2 w-full">
                 <button
                   onClick={(e) => handleMessageClick(e, user._id)}
-                  className="px-4 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 w-full transition-colors"
+                  className="px-3 py-2 text-sm bg-violet-500 text-white rounded-lg hover:bg-violet-600 flex-1 transition-colors"
                 >
                   Message
                 </button>
                 <button
                   onClick={(e) => handleBookClick(e, user._id)}
                   disabled={user.role !== "provider"}
-                  className={`px-4 py-2 text-sm rounded-lg transition-all duration-300 border w-full ${
+                  className={`px-3 py-2 text-sm rounded-lg transition-all duration-300 border flex-1 ${
                     user.role === "provider"
                       ? "border-violet-500 text-black bg-white hover:bg-gray-100"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                 >
                   Book
+                </button>
+                <button
+                  onClick={(e) => handleReviewClick(e, user._id)}
+                  disabled={user.role !== "provider"}
+                  className={`px-3 py-2 text-sm rounded-lg flex-1 transition-all duration-300 ${
+                    user.role === "provider"
+                      ? "bg-green-500 text-white hover:bg-green-600"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  Reviews
                 </button>
               </div>
             </div>
