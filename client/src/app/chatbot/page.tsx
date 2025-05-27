@@ -89,7 +89,7 @@ export default function ChatBot() {
     // Initialize with welcome message
     const welcomeMessage: Message = {
       content:
-        "Hi, I'm your local services assistant! I can help you find information about electricians, plumbers, technicians, cleaners, mechanics, carpenters, and babysitters. How can I assist you today? 😊",
+        "Hi, I am your local services assistant! I can help you find information about electricians, plumbers, technicians, cleaners, mechanics, carpenters, and babysitters. How can I assist you today? 😊",
       sender: "bot",
       timestamp: new Date(),
     }
@@ -150,7 +150,7 @@ export default function ChatBot() {
       }
 
       const botMessage: Message = {
-        content: answer || "Sorry, I didn't understand that.",
+        content: answer || "Sorry, I did not understand that.",
         sender: "bot",
         timestamp: new Date(),
         sessionId: newSessionId || sessionId,
@@ -161,9 +161,9 @@ export default function ChatBot() {
       if (newSuggestions) {
         setSuggestions(newSuggestions)
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error:", error)
-      const errorMessage = error.response?.data?.error || "Sorry, something went wrong. Please try again."
+      const errorMessage = (error instanceof axios.AxiosError && error.response?.data?.error) || "Sorry, something went wrong. Please try again."
 
       setMessages((prev) => [
         ...prev,
@@ -370,7 +370,7 @@ export default function ChatBot() {
                         {message.content}
                       </p>
                       {message.description && (
-                        <p className="text-xs text-gray-500 mt-1 italic">"{message.description}"</p>
+                        <p className="text-xs text-gray-500 mt-1 italic">{`"${message.description}"`}</p>
                       )}
                       <p className={`text-xs mt-1 ${message.sender === "bot" ? "text-gray-500" : "text-gray-300"}`}>
                         {formatTime(message.timestamp)}

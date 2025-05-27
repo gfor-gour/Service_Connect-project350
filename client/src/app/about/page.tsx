@@ -91,7 +91,7 @@ const About = () => {
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Our Mission</h2>
               <p className="text-xl text-gray-600 leading-relaxed mb-8">
                 At ServiceConnect, we aim to bridge the gap between customers and local service providers by offering a
-                seamless, reliable, and efficient platform. Whether you need a quick fix or long-term assistance, we're
+                seamless, reliable, and efficient platform. Whether you need a quick fix or long-term assistance, we&apos;re
                 here to help you connect with the right professionals.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -185,7 +185,7 @@ const About = () => {
                 <div className="space-y-6">
                   <p className="text-lg text-gray-600 leading-relaxed">
                     ServiceConnect was born from a simple observation: finding reliable local service providers
-                    shouldn't be a hassle. As students at SUST, we experienced firsthand the challenges of connecting
+                    shouldn&apos;t be a hassle. As students at SUST, we experienced firsthand the challenges of connecting
                     with trustworthy professionals for everyday needs.
                   </p>
                   <p className="text-lg text-gray-600 leading-relaxed">

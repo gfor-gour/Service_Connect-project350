@@ -82,7 +82,7 @@ Keep the response informative but concise (2-3 paragraphs maximum).`;
       },
     });
 
-    const aiResponse = response.data.candidates?.[0]?.content?.parts?.[0]?.text || "I don't know.";
+    const aiResponse = response.data.candidates?.[0]?.content?.parts?.[0]?.text || "I do not know.";
 
     const suggestions = generateSuggestions(effectiveCategory);
 

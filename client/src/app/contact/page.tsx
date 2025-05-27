@@ -54,7 +54,7 @@ const Contact = () => {
                 <span className="block text-gray-300">Our Support Team</span>
               </h1>
               <p className="text-xl md:text-2xl mb-10 text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Have questions or need assistance? We're here to help you 24/7. Reach out to us through any of our
+                Have questions or need assistance? We are here to help you 24/7. Reach out to us through any of our
                 support channels.
               </p>
 

@@ -239,7 +239,7 @@ const Login = () => {
             {/* Sign Up Link */}
             {!isForgotPassword && (
               <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-                <p className="text-gray-600 text-sm mb-3">Don't have an account?</p>
+                <p className="text-gray-600 text-sm mb-3">Don&apos;t have an account?</p>
                 <Link
                   href="/signup"
                   className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-100 text-gray-800 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200 focus:ring-4 focus:ring-gray-300"

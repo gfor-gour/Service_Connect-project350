@@ -185,7 +185,7 @@ const Home = () => {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Why Choose ServiceConnect?</h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                We're committed to connecting you with the best service providers in your area
+                We&apos;re committed to connecting you with the best service providers in your area
               </p>
             </div>
 
@@ -224,7 +224,7 @@ const Home = () => {
                       <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                     ))}
                   </div>
-                  <p className="text-gray-600 mb-4 italic">"{testimonial.content}"</p>
+                  <p className="text-gray-600 mb-4 italic">{`"${testimonial.content}"`}</p>
                   <div>
                     <div className="font-semibold text-gray-800">{testimonial.name}</div>
                     <div className="text-sm text-gray-500">{testimonial.role}</div>
@@ -259,13 +259,13 @@ const Home = () => {
               {/* Dialog Header */}
               <div className="bg-gray-800 px-8 py-6 text-center">
                 <h2 className="text-2xl font-bold text-white mb-2">Welcome to ServiceConnect!</h2>
-                <p className="text-gray-300 text-sm">Choose how you'd like to get started</p>
+                <p className="text-gray-300 text-sm">Choose how you&apos;d like to get started</p>
               </div>
 
               {/* Dialog Content */}
               <div className="p-8">
                 <p className="text-gray-600 mb-8 text-center leading-relaxed">
-                  Whether you're looking for services or offering them, we're here to help you connect with the right
+                  Whether you&apos;re looking for services or offering them, we&apos;re here to help you connect with the right
                   people.
                 </p>
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
-import { Star, Edit, Trash2 } from "lucide-react"
+import { Star, Trash2 } from "lucide-react"
 import Sidebar from "../../components/Sidebar"
 
 interface Review {
