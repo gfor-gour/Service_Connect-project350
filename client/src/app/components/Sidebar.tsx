@@ -70,7 +70,9 @@ const Sidebar = () => {
   };
 
   const handleUpdateProfileClick = () => {
-    router.push(userRole === "provider" ? "/provider-profile" : "/user-profile");
+    router.push(
+      userRole === "provider" ? "/provider-profile" : "/user-profile"
+    );
   };
 
   const closeSidebar = () => setSidebarOpen(false);
@@ -87,10 +89,10 @@ const Sidebar = () => {
       </button>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:flex fixed left-0 top-0 w-64 h-full bg-gradient-to-b from-indigo-600 via-purple-600 to-indigo-600 text-white py-8 px-6 flex-col shadow-lg">
+      <div className="hidden lg:flex fixed left-0 top-0 w-64 h-full bg-gray-800 text-white py-8 px-6 flex-col shadow-lg">
         <div className="mb-8 text-center">
           <div className="w-24 h-24 rounded-full bg-white mx-auto mb-4 flex items-center justify-center shadow-md">
-            <span className="text-3xl font-bold text-indigo-600">
+            <span className="text-3xl font-bold text-gray-800">
               {userName ? userName[0].toUpperCase() : "U"}
             </span>
           </div>
@@ -102,7 +104,7 @@ const Sidebar = () => {
             <li>
               <button
                 onClick={handleDashboardClick}
-                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
               >
                 <LayoutDashboard size={20} />
                 <span>Dashboard</span>
@@ -111,7 +113,7 @@ const Sidebar = () => {
             <li>
               <Link
                 href="/search"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
               >
                 <Users size={20} />
                 <span>Find Users</span>
@@ -121,7 +123,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href={`/messenger?userId=${userId}`}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                 >
                   <MessageSquare size={20} />
                   <span>Messenger</span>
@@ -131,7 +133,7 @@ const Sidebar = () => {
             <li>
               <Link
                 href="/services"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
               >
                 <Wrench size={20} />
                 <span>Services</span>
@@ -140,7 +142,7 @@ const Sidebar = () => {
             <li>
               <Link
                 href="/chatbot"
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
               >
                 <Bot size={20} />
                 <span>AI Assistant</span>
@@ -151,23 +153,23 @@ const Sidebar = () => {
 
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition mt-auto"
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-red-600 border border-red-600 hover:bg-red-100 transition mt-auto"
         >
-          <LogOut size={20} />
+          <LogOut size={20} className="text-red-600" />
           <span>Logout</span>
         </button>
       </div>
 
       {/* Mobile sidebar */}
       <div
-        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-gradient-to-b from-indigo-600 via-purple-600 to-indigo-600 text-white py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-gray-800 text-white py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 ${
           sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="h-full flex flex-col pt-12">
           <div className="mb-8 text-center">
             <div className="w-24 h-24 rounded-full bg-white mx-auto mb-4 flex items-center justify-center shadow-md">
-              <span className="text-3xl font-bold text-indigo-600">
+              <span className="text-3xl font-bold text-gray-800">
                 {userName ? userName[0].toUpperCase() : "U"}
               </span>
             </div>
@@ -187,7 +189,7 @@ const Sidebar = () => {
                     handleDashboardClick();
                     closeSidebar();
                   }}
-                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                 >
                   <LayoutDashboard size={20} />
                   <span>Dashboard</span>
@@ -199,7 +201,7 @@ const Sidebar = () => {
                     handleUpdateProfileClick();
                     closeSidebar();
                   }}
-                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                 >
                   <UserCog size={20} />
                   <span>Update Profile</span>
@@ -209,7 +211,7 @@ const Sidebar = () => {
                 <Link
                   href="/search"
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                 >
                   <Users size={20} />
                   <span>Find Users</span>
@@ -220,7 +222,7 @@ const Sidebar = () => {
                   <Link
                     href={`/messenger?userId=${userId}`}
                     onClick={closeSidebar}
-                    className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                   >
                     <MessageSquare size={20} />
                     <span>Messenger</span>
@@ -231,7 +233,7 @@ const Sidebar = () => {
                 <Link
                   href="/services"
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                 >
                   <Wrench size={20} />
                   <span>Services</span>
@@ -241,7 +243,7 @@ const Sidebar = () => {
                 <Link
                   href="/chatbot"
                   onClick={closeSidebar}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-indigo-600 transition"
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white hover:text-gray-800 transition"
                 >
                   <Bot size={20} />
                   <span>AI Assistant</span>
@@ -255,7 +257,7 @@ const Sidebar = () => {
               handleLogout();
               closeSidebar();
             }}
-            className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition mt-auto"
+            className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-white text-red-600 border border-red-600 hover:bg-red-100 transition mt-auto"
           >
             <LogOut size={20} />
             <span>Logout</span>

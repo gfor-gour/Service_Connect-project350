@@ -1,8 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const { generateContent } = require("../controllers/generateController");
+const express = require("express")
+const router = express.Router()
+const { generateContent, getChatHistory, clearChatHistory } = require("../controllers/generateController")
 
-// Define the POST route
-router.post("/", generateContent);
+// Generate content route
+router.post("/generate", generateContent)
 
-module.exports = router;
+// Get chat history route
+router.get("/history/:sessionId", getChatHistory)
+
+// Clear chat history route
+router.delete("/history", clearChatHistory)
+
+module.exports = router
