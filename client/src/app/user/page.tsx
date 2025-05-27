@@ -49,13 +49,14 @@ const UserProfile = () => {
       title: "Find User",
       icon: Search,
       description: "Search and connect with service ",
-      action: () => router.push("/find-user"),
+      action: () => router.push("/search"),
     },
     {
       title: "Messenger",
       icon: MessageCircle,
       description: "Chat with your service providers",
-      action: () => router.push("/messenger"),
+      action: () => router.push("/messenger?userId=" + localStorage.getItem("userId")),
+
     },
     {
       title: "Services",
@@ -67,7 +68,7 @@ const UserProfile = () => {
       title: "AI Assistant",
       icon: Bot,
       description: "Get help from our AI assistant",
-      action: () => router.push("/ai-assistant"),
+      action: () => router.push("/chatbot"),
     },
   ]
 
