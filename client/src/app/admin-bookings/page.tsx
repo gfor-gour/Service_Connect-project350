@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Trash2, Calendar, Settings } from "lucide-react"
+import { Calendar } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import AdminSidebar from "../components/admin-sidebar"
 
 interface Booking {
   _id: string
@@ -33,6 +33,7 @@ export default function ManageBookings() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [sidebarExpanded, setSidebarExpanded] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -60,28 +61,11 @@ export default function ManageBookings() {
       } else {
         setError("Failed to fetch bookings")
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error fetching bookings:", error)
       setError("Error connecting to server")
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleDeleteBooking = async (bookingId: string) => {
-    if (!confirm("Are you sure you want to delete this booking?")) return
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/bookings/booking/${bookingId}`, {
-        method: "DELETE",
-      })
-
-      if (response.ok) {
-        setBookings(bookings.filter((booking) => booking._id !== bookingId))
-      } else {
-        setError("Failed to delete booking")
-      }
-    } catch (err) {
-      setError("Error deleting booking")
     }
   }
 
@@ -112,38 +96,18 @@ export default function ManageBookings() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm">
-        <div className="p-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Settings className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">ServiceConnect</span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      <AdminSidebar onToggle={(expanded) => setSidebarExpanded(expanded)} />
 
-        <nav className="mt-8">
-          <div className="px-6 py-2">
-            <Button variant="ghost" onClick={() => router.push("/admin/dashboard")} className="w-full justify-start">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="ml-64 p-8">
-        <div className="mb-8">
+      <div className={`w-full transition-all duration-300 ${sidebarExpanded ? "md:ml-64" : "md:ml-14"} p-4 md:p-8`}>
+        <div className="mb-6 md:mb-8">
           <div className="flex items-center space-x-3 mb-2">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-purple-600" />
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <Calendar className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Manage Bookings</h1>
-              <p className="text-gray-600">View and manage all booking requests</p>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Manage Bookings</h1>
+              <p className="text-sm md:text-base text-gray-600">View and manage all booking requests</p>
             </div>
           </div>
         </div>
@@ -156,62 +120,54 @@ export default function ManageBookings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>All Bookings ({bookings.length})</CardTitle>
+            <CardTitle className="text-lg md:text-xl">All Bookings ({bookings.length})</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0 md:p-4 overflow-x-auto">
             {loading ? (
               <div className="text-center py-8">Loading bookings...</div>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Provider</TableHead>
-                    <TableHead>Service</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Payment</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {bookings.map((booking) => (
-                    <TableRow key={booking._id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{booking.userId?.name || "N/A"}</div>
-                          <div className="text-sm text-gray-500">{booking.userId?.email}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{booking.providerId?.name || "N/A"}</div>
-                          <div className="text-sm text-gray-500">{booking.providerId?.email}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className="bg-blue-500 text-white">{booking.providerId?.workType || "N/A"}</Badge>
-                      </TableCell>
-                      <TableCell className="max-w-xs truncate">{booking.description}</TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusBadgeVariant(booking.status)}>{booking.status}</Badge>
-                      </TableCell>
-                      <TableCell>{booking.price ? `৳${booking.price}` : "N/A"}</TableCell>
-                      <TableCell>
-                        <Badge variant={getPaymentStatusBadgeVariant(booking.paymentStatus)}>
-                          {booking.paymentStatus}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="destructive" size="sm" onClick={() => handleDeleteBooking(booking._id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Provider</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Payment</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {bookings.map((booking) => (
+                      <TableRow key={booking._id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{booking.userId?.name || "N/A"}</div>
+                            <div className="text-xs md:text-sm text-gray-500">{booking.userId?.email}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{booking.providerId?.name || "N/A"}</div>
+                            <div className="text-xs md:text-sm text-gray-500">{booking.providerId?.email}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[100px] md:max-w-xs truncate">{booking.description}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusBadgeVariant(booking.status)}>{booking.status}</Badge>
+                        </TableCell>
+                        <TableCell>{booking.price ? `৳${booking.price}` : "N/A"}</TableCell>
+                        <TableCell>
+                          <Badge variant={getPaymentStatusBadgeVariant(booking.paymentStatus)}>
+                            {booking.paymentStatus}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             )}
           </CardContent>
         </Card>

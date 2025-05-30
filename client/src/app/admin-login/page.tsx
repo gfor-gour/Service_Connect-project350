@@ -24,7 +24,7 @@ export default function AdminLogin() {
     } else {
       console.log("Token not found")
     }
-  }, [])
+  }, [router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,7 +51,8 @@ export default function AdminLogin() {
       } else {
         setError(data.message || "Login failed")
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Login error:", error)
       setError("Error connecting to server")
     } finally {
       setIsLoading(false)
