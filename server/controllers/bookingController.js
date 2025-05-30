@@ -129,3 +129,20 @@ exports.getUserBookings = async (req, res) => {
   }
 };
 
+exports.getallBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find().populate("userId providerId", "name email");
+
+    if (!bookings.length) {
+      return res.status(404).json({ message: "No bookings found" });
+    }
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+
+
