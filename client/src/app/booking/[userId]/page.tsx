@@ -219,10 +219,6 @@ export default function BookingPage() {
     }
   }
 
-  const handleCashOnDelivery = (booking: Booking) => {
-    alert(`Cash on Delivery selected for Booking ID: ${booking._id}`)
-    // Implement COD logic
-  }
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-white">
@@ -301,12 +297,6 @@ export default function BookingPage() {
 
                     {booking.status === "accepted" && booking.paymentStatus !== "success" && booking.price && (
                       <div className="mt-4 flex flex-col sm:flex-row gap-4">
-                        <button
-                          onClick={() => handleCashOnDelivery(booking)}
-                          className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition"
-                        >
-                          Cash on Delivery
-                        </button>
                         <button
                           onClick={() => handlePayment(booking)}
                           disabled={booking.paymentStatus === "success"}

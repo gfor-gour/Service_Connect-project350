@@ -1,6 +1,6 @@
 // routes/bookingRoutes.js
 const express = require("express");
-const { createBooking, handleBookingResponse, getBookingStatus,getUserBookings } = require("../controllers/bookingController");
+const { createBooking, handleBookingResponse, getBookingStatus,getUserBookings, getallBookings} = require("../controllers/bookingController");
 const router = express.Router();
 
 // Create a Booking Request
@@ -14,5 +14,9 @@ router.get("/status/:bookingId", getBookingStatus);
 
 
 router.get("/user/:userId", getUserBookings);
+
+router.get("/bookings",getallBookings);
+// Delete a Booking by ID (Admin only)  
+
 
 module.exports = router;
