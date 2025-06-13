@@ -26,10 +26,7 @@ const io = new Server(server, {
 app.set('io', io);
 
 app.use(
-  cors({
-    origin: process.env.NEXT_PUBLIC_APP_FRONTEND_URL,
-    credentials: true,
-  })
+  cors()
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
