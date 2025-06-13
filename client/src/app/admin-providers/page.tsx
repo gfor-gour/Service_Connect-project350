@@ -34,6 +34,11 @@ export default function ManageProviders() {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem("adminLoggedIn");
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      window.location.href = "/admin-login";
+      return;
+    }
     fetchUsers();
   }, []);
 
