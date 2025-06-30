@@ -14,6 +14,8 @@ const app = express();
 const server = http.createServer(app);
 
 // Socket.IO setup with CORS
+app.options('*', cors()); // ✅ handle browser preflight requests
+
 const io = new Server(server, {
   cors: {
     origin: process.env.NEXT_PUBLIC_APP_FRONTEND_URL,
@@ -54,6 +56,9 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 // Define routes
+app.get("/",async (req,res)=>{
+  res.status(200).json({message: "Server is running fine"});
+})
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/search', searchRoutes);
