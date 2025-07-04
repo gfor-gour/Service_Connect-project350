@@ -5,6 +5,8 @@ import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { Mail, Lock, UserPlus, ArrowRight, User, Shield } from "lucide-react"
+import toast from "react-hot-toast"
+
 
 const SignUp = () => {
   const [email, setEmail] = useState("")
@@ -32,6 +34,7 @@ const SignUp = () => {
 
       if (response.ok) {
         setIsSuccess(true)
+        toast.success("Signup successful! Check your email for verification.")
         setTimeout(() => {
           window.location.href = "/login"
         }, 2000)
