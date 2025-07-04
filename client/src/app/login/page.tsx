@@ -6,6 +6,8 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react"
+import toast from "react-hot-toast"
+
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -37,6 +39,8 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json()
         setIsSuccess(true)
+        toast.success("Login successful!")
+
 
         // Save token, user ID, and email in localStorage
         localStorage.setItem("token", data.token)
