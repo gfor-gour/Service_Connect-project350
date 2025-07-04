@@ -1,16 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'  // Import useRouter for navigation handling
+import { useParams, useRouter } from 'next/navigation'
 import ChatWindow from '../ChatWindow'
 
 export default function UserChat() {
   const { userId } = useParams()
   const [conversationId, setConversationId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const router = useRouter()  // Use the router for navigation
-  const [currentUserEmail, setCurrentUserEmail] = useState<string>('')
+  // Remove error string state, we'll handle differently
+  const router = useRouter()
+  const [currentUserEmail, setCurrentUserEmail] = useState('')
 
   useEffect(() => {
     const getOrCreateConversation = async () => {
@@ -18,47 +18,61 @@ export default function UserChat() {
         const token = localStorage.getItem('token')
         if (!token) throw new Error('No token found')
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/conversations/${userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/conversations/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        
-        if (!response.ok) throw new Error('Failed to get or create conversation')
-        
+        )
+
+        if (!response.ok) {
+          // Instead of throwing error, just set conversationId null to show message
+          setConversationId(null)
+          return
+        }
+
         const data = await response.json()
         setConversationId(data._id)
       } catch {
-        setError('Failed to load conversation')
+        // On catch error, just treat as no conversation found to show friendly message
+        setConversationId(null)
       } finally {
         setLoading(false)
       }
     }
 
-    // Retrieve current user's email from localStorage or other method
     const email = localStorage.getItem('email') || ''
     setCurrentUserEmail(email)
-    console.log('Current user email:', email)
 
     if (userId) {
       getOrCreateConversation()
+    } else {
+      setLoading(false)
+      setConversationId(null)
     }
   }, [userId])
 
   const handleBack = () => {
-    // Navigate back to previous page
-    router.back()  // Use Next.js router to go back
+    router.back()
   }
 
   if (loading) return <div className="p-4">Loading conversation...</div>
-  if (error) return <div className="p-4 text-red-500">{error}</div>
-  if (!conversationId) return <div className="p-4">No conversation found</div>
+
+  // Instead of showing error, show this friendly message if no conversationId
+  if (!conversationId)
+    return (
+      <div className="p-4 text-center text-gray-600">
+        Send someone a message to start chatting.
+      </div>
+    )
 
   return (
     <ChatWindow
       conversationId={conversationId}
-      onBack={handleBack}  // Pass the handleBack function to the ChatWindow
-      currentUserEmail={currentUserEmail}  // Pass current user email to the ChatWindow
+      onBack={handleBack}
+      currentUserEmail={currentUserEmail}
     />
   )
 }
