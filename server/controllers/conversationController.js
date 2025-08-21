@@ -39,7 +39,7 @@ exports.protect = async (req, res, next) => {
 exports.getConversations = async (req, res) => {
   try {
     const conversations = await Conversation.find({ participants: req.user.id })
-      .populate('participants', 'name email') // Populate participant details
+      .populate('participants', 'name email profilePicture') // Populate participant details
       .sort('-updatedAt'); // Sort by latest updated time
 
     if (conversations.length === 0) {
@@ -73,13 +73,13 @@ exports.getOrCreateConversation = async (req, res) => {
     // Find or create a conversation between the users
     let conversation = await Conversation.findOne({
       participants: { $all: [currentUser, userId] },
-    }).populate('participants', 'name email');
+    }).populate('participants', 'name email profilePicture');
 
     // If no conversation found, create a new one
     if (!conversation) {
       conversation = new Conversation({ participants: [currentUser, userId] });
       await conversation.save();
-      await conversation.populate('participants', 'name email');
+      await conversation.populate('participants', 'name email profilePicture');
     }
 
     res.status(200).json(conversation);
@@ -102,7 +102,7 @@ exports.getMessages = async (req, res) => {
 
     // Fetch messages for the conversation
     const messages = await Message.find({ conversation: conversationId })
-      .populate('sender', 'name email') // Populate sender details
+      .populate('sender', 'name email profilePicture') // Populate sender details
       .sort('createdAt'); // Sort by message creation time
 
     if (messages.length === 0) {
@@ -147,7 +147,7 @@ exports.sendMessage = async (req, res) => {
     await conversation.save();
 
     // Populate sender details in the message
-    const populatedMessage = await newMessage.populate('sender', 'name email');
+    const populatedMessage = await newMessage.populate('sender', 'name email profilePicture');
 
     // Emit the new message via Socket.IO (if applicable)
     req.app.get('io').to(conversation._id.toString()).emit('receive message', populatedMessage);
