@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -12,17 +14,26 @@ import {
   Bot,
   LogOut,
   X,
-  Columns2,
+  Menu,
 } from "lucide-react";
 
-const Sidebar = () => {
+interface SidebarProps {
+  onToggle?: (collapsed: boolean) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onToggle }) => {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
-  const [workType, setWorkType] = useState("");
   const [userId, setUserId] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true); // minimized by default
+
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(collapsed);
+    }
+  }, [collapsed, onToggle]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,7 +55,6 @@ const Sidebar = () => {
             const userData = await response.json();
             setUserName(userData.name || "User");
             setUserRole(userData.role || "user");
-            setWorkType(userData.workType || "");
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -77,44 +87,33 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Desktop sidebar */}
-      <div
-        className={`hidden lg:flex fixed left-0 top-0 h-full bg-white text-black py-8 px-3 flex-col shadow-lg transition-all duration-300 ${
-          collapsed ? "w-20" : "w-64"
-        }`}
-      >
-        {/* Profile */}
-        <div
-          className="mb-8 text-center cursor-pointer relative"
+      {/* Top Navbar */}
+      <div className="hidden md:flex fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 items-center justify-between px-4 z-40">
+        {/* Menu toggle button */}
+        <button
           onClick={() => setCollapsed(!collapsed)}
+          className="hidden lg:flex p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
-          <div
-            className={`rounded-full bg-black text-white mx-auto mb-2 flex items-center justify-center transition-all duration-300 ${
-              collapsed ? "w-12 h-12" : "w-14 h-14"
-            }`}
-          >
-            <span
-              className={`text-lg font-bold transition-all duration-300 ${
-                collapsed ? "text-xl" : "text-lg"
-              }`}
-            >
-              {userName ? userName[0].toUpperCase() : "U"}
-            </span>
-          </div>
-          {!collapsed && <h2 className="text-sm font-semibold">{userName}</h2>}
+          <Menu size={20} />
+        </button>
 
-          {/* ChatGPT-style close button */}
-          {/* Columns2 collapse button */}
-          {!collapsed && (
-            <button
-              onClick={() => setCollapsed(true)}
-              className="absolute -top-4 right-0 p-2 bg-gray-200 rounded-full shadow hover:bg-gray-300 transition"
-            >
-              <Columns2 size={20} />
-            </button>
-          )}
+        <div className="flex-1 text-center">
+          <span className="text-sm font-medium text-gray-800">
+            {userName || "User"}
+          </span>
         </div>
 
+        <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-sm font-bold">
+          {userName ? userName[0].toUpperCase() : "U"}
+        </div>
+      </div>
+
+      {/* Desktop sidebar */}
+      <div
+        className={`hidden lg:flex fixed left-0 top-14 h-[calc(100vh-3.5rem)] bg-white text-black py-4 px-3 flex-col shadow-lg transition-all duration-300 ${
+          collapsed ? "w-16" : "w-64"
+        }`}
+      >
         {/* Navigation */}
         <nav className="flex-1">
           <ul className="space-y-2">
@@ -180,31 +179,21 @@ const Sidebar = () => {
 
       {/* Mobile sidebar */}
       <button
-        className="lg:hidden fixed top-4 right-4 z-[60] p-3 bg-black text-white rounded-full shadow-lg hover:bg-gray-700 transition-colors"
+        className="lg:hidden fixed top-4 left-4 z-[60] p-3 bg-black text-white rounded-full shadow-lg hover:bg-gray-700 transition-colors"
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label="Toggle menu"
       >
-        {sidebarOpen ? <X size={28} /> : <X size={28} />}
+        {sidebarOpen ? <X size={28} /> : <Menu size={28} />}
       </button>
 
       <div
-        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-white text-black py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 ${
-          sidebarOpen ? "translate-x-0" : "translate-x-full"
+        className={`lg:hidden fixed inset-y-0 left-0 w-[280px] bg-white text-black py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 shadow-xl ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="h-full flex flex-col pt-12">
           <div className="mb-8 text-center">
-            <div className="w-20 h-20 rounded-full bg-black text-white mx-auto mb-4 flex items-center justify-center shadow-md">
-              <span className="text-2xl font-bold">
-                {userName ? userName[0].toUpperCase() : "U"}
-              </span>
-            </div>
-            <h2 className="text-xl font-semibold">{userName}</h2>
-            {userRole === "provider" && workType && (
-              <p className="text-sm text-gray-600 mt-1 capitalize">
-                {workType}
-              </p>
-            )}
+            <h2 className="text-xl font-semibold">Menu</h2>
           </div>
 
           <nav className="flex-1">
