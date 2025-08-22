@@ -131,14 +131,10 @@ const ProviderPage = () => {
   return (
     <div className="flex min-h-screen bg-white">
       <Sidebar />
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex-1 p-8 overflow-y-auto">
+        <div className="w-full max-w-5xl mx-auto space-y-6 md:space-y-8">
           {/* Profile Section */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-6 md:mb-8 text-gray-800 text-center">
-              Provider Profile
-            </h1>
-
             <div className="flex flex-col items-center mb-6 md:mb-8">
               <div className="relative mb-4 md:mb-6">
                 {profile.profilePicture ? (
