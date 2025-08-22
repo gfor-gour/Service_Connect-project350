@@ -1,8 +1,10 @@
 "use client";
 
+import type React from "react";
+
 export const dynamic = "force-dynamic";
 
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 
@@ -27,6 +29,8 @@ const ProviderProfile = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [updating, setUpdating] = useState(false);
   const router = useRouter();
+
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const uploadToCloudinary = async (file: File) => {
     const formData = new FormData();
@@ -171,8 +175,12 @@ const ProviderProfile = () => {
   if (loading) {
     return (
       <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="flex-1 flex items-center justify-center">
+        <Sidebar onToggle={setIsSidebarCollapsed} />
+        <div
+          className={`flex-1 flex items-center justify-center transition-all duration-300 px-4 md:pt-14 ${
+            isSidebarCollapsed ? "lg:pl-16" : "lg:pl-64"
+          }`}
+        >
           <div className="flex flex-col items-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-gray-800"></div>
             <p className="text-gray-600">Loading profile...</p>
@@ -184,11 +192,14 @@ const ProviderProfile = () => {
 
   // Error state
   if (error && !profile.email) {
-    // Only show error if profile is completely empty
     return (
       <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="flex-1 flex items-center justify-center">
+        <Sidebar onToggle={setIsSidebarCollapsed} />
+        <div
+          className={`flex-1 flex items-center justify-center transition-all duration-300 px-4 md:pt-14 ${
+            isSidebarCollapsed ? "lg:pl-16" : "lg:pl-64"
+          }`}
+        >
           <div className="text-center">
             <p className="text-red-500 text-lg mb-4">{error}</p>
             <button
@@ -205,138 +216,142 @@ const ProviderProfile = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <Sidebar />
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-          <h1 className="text-4xl font-extrabold mb-8 text-gray-800 text-center">
-            Provider Dashboard
-          </h1>
+      <Sidebar onToggle={setIsSidebarCollapsed} />
+      <div
+        className={`flex-1 min-h-screen transition-all duration-300 ease-in-out px-4 md:px-0 md:pt-14 ${
+          isSidebarCollapsed ? "lg:pl-16" : "lg:pl-64"
+        }`}
+      >
+        <div className="py-4 md:p-8 w-full max-w-none">
+          <div className="w-full space-y-6 md:space-y-8">
+            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+              {error && (
+                <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {error}
+                </div>
+              )}
 
-          {error && (
-            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )}
+              <div className="flex flex-col items-center mb-8">
+                <div className="relative mb-6">
+                  <img
+                    src={profile.profilePicture || "/default-avatar.png"}
+                    alt="Profile"
+                    className="w-32 h-32 rounded-full object-cover border-4 border-gray-800 shadow-lg"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/default-avatar.png";
+                    }}
+                  />
+                  <label
+                    htmlFor="profilePicture"
+                    className="absolute bottom-0 right-0 bg-gray-800 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-gray-700 transition"
+                  >
+                    Change
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    name="profilePicture"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
 
-          <div className="flex flex-col items-center mb-8">
-            <div className="relative mb-6">
-              <img
-                src={profile.profilePicture || "/default-avatar.png"}
-                alt="Profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-gray-800 shadow-lg"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "/default-avatar.png";
-                }}
-              />
-              <label
-                htmlFor="profilePicture"
-                className="absolute bottom-0 right-0 bg-gray-800 text-white rounded-full px-3 py-2 text-sm cursor-pointer hover:bg-gray-700 transition"
-              >
-                Change
-              </label>
-              <input
-                type="file"
-                id="profilePicture"
-                name="profilePicture"
-                onChange={handleImageChange}
-                className="hidden"
-                accept="image/*"
-              />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-800 mb-2"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={profile.name || ""}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-800 mb-2"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={profile.email || ""}
+                      readOnly
+                      className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-800 text-gray-800"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="address"
+                      className="block text-sm font-medium text-gray-800 mb-2"
+                    >
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      id="address"
+                      name="address"
+                      value={profile.address || ""}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="workType"
+                      className="block text-sm font-medium text-gray-800 mb-2"
+                    >
+                      Work Type
+                    </label>
+                    <select
+                      id="workType"
+                      name="workType"
+                      value={profile.workType || ""}
+                      onChange={(e) =>
+                        setProfile((prev) => ({
+                          ...prev,
+                          workType: e.target.value,
+                        }))
+                      }
+                      className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                    >
+                      <option value="" disabled>
+                        Select work type
+                      </option>
+                      <option value="plumber">Plumber</option>
+                      <option value="electrician">Electrician</option>
+                      <option value="babysitter">Babysitter</option>
+                      <option value="cleaner">Cleaner</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex justify-center mt-8">
+                  <button
+                    type="submit"
+                    disabled={updating}
+                    className="px-8 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:bg-gray-600 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {updating ? "Updating..." : "Update Profile"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-800 mb-2"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={profile.name || ""}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-800 mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={profile.email || ""}
-                  readOnly
-                  className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-800 text-gray-800"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-gray-800 mb-2"
-                >
-                  Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={profile.address || ""}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="workType"
-                  className="block text-sm font-medium text-gray-800 mb-2"
-                >
-                  Work Type
-                </label>
-                <select
-                  id="workType"
-                  name="workType"
-                  value={profile.workType || ""}
-                  onChange={(e) =>
-                    setProfile((prev) => ({
-                      ...prev,
-                      workType: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-2 rounded-lg border border-gray-800 text-gray-800 focus:ring-2 focus:ring-gray-800 focus:border-transparent"
-                >
-                  <option value="" disabled>
-                    Select work type
-                  </option>
-                  <option value="plumber">Plumber</option>
-                  <option value="electrician">Electrician</option>
-                  <option value="babysitter">Babysitter</option>
-                  <option value="cleaner">Cleaner</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex justify-center mt-8">
-              <button
-                type="submit"
-                disabled={updating}
-                className="px-8 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:bg-gray-600 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {updating ? "Updating..." : "Update Profile"}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
