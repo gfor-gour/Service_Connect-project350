@@ -42,7 +42,9 @@ export default function ConversationList({
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/conversations`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         if (!response.ok) throw new Error("Failed to fetch conversations");
 

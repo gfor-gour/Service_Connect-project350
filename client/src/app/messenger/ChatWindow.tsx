@@ -1,9 +1,11 @@
 "use client";
 
+import type React from "react";
+
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import Image from "next/image";
-import io, { Socket } from "socket.io-client";
+import io, { type Socket } from "socket.io-client";
 
 interface Sender {
   _id: string;
@@ -221,9 +223,9 @@ export default function ChatWindow({
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
-      {/* Header */}
-      <div className="bg-white flex items-center p-4 border-b border-gray-200">
+    <div className="flex flex-col h-full bg-gray-100">
+      {/* Header - fixed at top */}
+      <div className="bg-white flex items-center p-4 border-b border-gray-200 flex-shrink-0">
         <button
           onClick={onBack}
           className="mr-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -234,7 +236,6 @@ export default function ChatWindow({
         <h2 className="font-semibold text-lg">Chat</h2>
       </div>
 
-      {/* Messages container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {loading && (
           <div className="text-center text-gray-500">
@@ -270,7 +271,7 @@ export default function ChatWindow({
                   <div className="w-10 h-10 rounded-full overflow-hidden mr-2 flex-shrink-0">
                     {msg.sender.profilePicture ? (
                       <Image
-                        src={msg.sender.profilePicture}
+                        src={msg.sender.profilePicture || "/placeholder.svg"}
                         alt={msg.sender.name || "User"}
                         width={40}
                         height={40}
@@ -326,8 +327,7 @@ export default function ChatWindow({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message input */}
-      <div className="bg-white border-t border-gray-200">
+      <div className="bg-white border-t border-gray-200 flex-shrink-0">
         <form onSubmit={sendMessage} className="p-4 flex">
           <input
             type="text"

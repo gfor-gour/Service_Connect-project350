@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Sidebar from "../../components/Sidebar";
 import ChatWindow from "../ChatWindow";
 
 export default function UserChat() {
@@ -10,6 +11,7 @@ export default function UserChat() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     const getOrCreateConversation = async () => {
@@ -19,7 +21,9 @@ export default function UserChat() {
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/conversations/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
 
         if (!response.ok) {
@@ -46,20 +50,49 @@ export default function UserChat() {
   const handleBack = () => router.back();
 
   if (loading)
-    return <div className="p-4 text-gray-600">Loading conversation...</div>;
+    return (
+      <div className="flex h-screen bg-gray-50">
+        <Sidebar onToggle={setIsSidebarCollapsed} />
+        <div
+          className={`flex-1 transition-all duration-300 ease-in-out ${
+            isSidebarCollapsed ? "lg:pl-16" : "lg:pl-64"
+          } px-4 md:px-0 md:pt-14`}
+        >
+          <div className="p-4 text-gray-600">Loading conversation...</div>
+        </div>
+      </div>
+    );
 
   if (!conversationId)
     return (
-      <div className="p-4 text-center text-gray-600">
-        Start a conversation by sending someone a message!
+      <div className="flex h-screen bg-gray-50">
+        <Sidebar onToggle={setIsSidebarCollapsed} />
+        <div
+          className={`flex-1 transition-all duration-300 ease-in-out ${
+            isSidebarCollapsed ? "lg:pl-16" : "lg:pl-64"
+          } px-4 md:px-0 md:pt-14`}
+        >
+          <div className="p-4 text-center text-gray-600">
+            Start a conversation by sending someone a message!
+          </div>
+        </div>
       </div>
     );
 
   return (
-    <ChatWindow
-      conversationId={conversationId}
-      onBack={handleBack}
-      currentUserEmail={currentUserEmail}
-    />
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar onToggle={setIsSidebarCollapsed} />
+      <div
+        className={`flex-1 transition-all duration-300 ease-in-out ${
+          isSidebarCollapsed ? "lg:pl-16" : "lg:pl-64"
+        } md:pt-14`}
+      >
+        <ChatWindow
+          conversationId={conversationId}
+          onBack={handleBack}
+          currentUserEmail={currentUserEmail}
+        />
+      </div>
+    </div>
   );
 }
