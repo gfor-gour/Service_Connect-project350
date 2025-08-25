@@ -16,7 +16,7 @@ interface Provider {
 
 interface Booking {
   _id: string;
-  providerId: Provider;
+  providerId: Provider | null;
   description: string;
   status: string;
   price?: number;
@@ -77,9 +77,9 @@ export default function BookingPage() {
 
           const data = await response.json();
 
-          // Filter bookings to show only those between current user and the specific provider
+          // Safe check for providerId before filtering
           const filteredBookings = data.filter(
-            (booking: Booking) => booking.providerId._id === userId
+            (booking: Booking) => booking.providerId?._id === userId
           );
 
           setBookingHistory(filteredBookings);
@@ -95,7 +95,6 @@ export default function BookingPage() {
 
           if (!currentUserId) return;
 
-          // If the current user is viewing their own provider profile, also fetch bookings where they are the provider
           if (currentUserId === userId) {
             const providerResponse = await fetch(
               `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/bookings/provider/${userId}`,
@@ -114,12 +113,7 @@ export default function BookingPage() {
         }
       };
 
-      await fetchProviderDetails();
-      await fetchBookingHistory();
-      await fetchProviderBookings(); // Add this line
-      await fetchUserDetails();
-
-      async function fetchUserDetails() {
+      const fetchUserDetails = async () => {
         try {
           const token = localStorage.getItem("token");
           const currentUserId = localStorage.getItem("userId");
@@ -139,7 +133,12 @@ export default function BookingPage() {
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
-      }
+      };
+
+      await fetchProviderDetails();
+      await fetchBookingHistory();
+      await fetchProviderBookings();
+      await fetchUserDetails();
     };
 
     fetchData();
@@ -324,7 +323,8 @@ export default function BookingPage() {
                       className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg shadow-md text-sm sm:text-base"
                     >
                       <p>
-                        <strong>Provider:</strong> {booking.providerId.name}
+                        <strong>Provider:</strong>{" "}
+                        {booking.providerId?.name || "Unknown"}
                       </p>
                       <p>
                         <strong>Status:</strong> {booking.status}

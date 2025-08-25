@@ -12,7 +12,7 @@ interface Review {
     _id: string;
     name: string;
     profilePicture?: string;
-  };
+  } | null;
   providerId: {
     _id: string;
     name: string;
@@ -383,62 +383,69 @@ export default function ReviewsPage() {
                   </div>
                 ) : (
                   <div className="space-y-6 max-h-[600px] overflow-y-auto pr-2">
-                    {reviews.map((review) => (
-                      <div
-                        key={review._id}
-                        className="border-b border-gray-200 pb-6 last:border-b-0"
-                      >
-                        <div className="flex items-start space-x-4">
-                          <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
-                            {review.userId.profilePicture ? (
-                              <Image
-                                src={
-                                  review.userId.profilePicture ||
-                                  "/placeholder.svg"
-                                }
-                                alt={review.userId.name}
-                                width={48}
-                                height={48}
-                                className="object-cover rounded-full"
-                              />
-                            ) : (
-                              <span className="text-gray-800 text-lg font-semibold">
-                                {review.userId.name.charAt(0)}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex flex-col space-y-1">
-                                <h4 className="font-semibold text-gray-800">
-                                  {review.userId.name}
-                                </h4>
-                                <div className="flex items-center space-x-2">
-                                  {renderStars(review.rating)}
-                                  <span className="text-sm text-gray-500">
-                                    {new Date(
-                                      review.createdAt
-                                    ).toLocaleDateString()}
-                                  </span>
-                                </div>
-                              </div>
-                              {review.userId._id === currentUserId && (
-                                <button
-                                  onClick={() => handleDeleteReview(review._id)}
-                                  className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
-                                  title="Delete review"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </button>
+                    {reviews
+                      .filter((review) => review.userId)
+                      .map((review) => (
+                        <div
+                          key={review._id}
+                          className="border-b border-gray-200 pb-6 last:border-b-0"
+                        >
+                          <div className="flex items-start space-x-4">
+                            {/* Profile */}
+                            <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden flex-shrink-0">
+                              {review.userId?.profilePicture ? (
+                                <Image
+                                  src={
+                                    review.userId?.profilePicture ||
+                                    "/placeholder.svg"
+                                  }
+                                  alt={review.userId?.name || "User"}
+                                  width={48}
+                                  height={48}
+                                  className="object-cover rounded-full"
+                                />
+                              ) : (
+                                <span className="text-gray-800 text-lg font-semibold">
+                                  {review.userId?.name?.charAt(0) || "U"}
+                                </span>
                               )}
                             </div>
-                            <p className="text-gray-700 leading-relaxed">
-                              {review.comment}
-                            </p>
+
+                            {/* Review Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex flex-col space-y-1">
+                                  <h4 className="font-semibold text-gray-800">
+                                    {review.userId?.name || "Unknown User"}
+                                  </h4>
+                                  <div className="flex items-center space-x-2">
+                                    {renderStars(review.rating)}
+                                    <span className="text-sm text-gray-500">
+                                      {new Date(
+                                        review.createdAt
+                                      ).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                </div>
+                                {review.userId?._id === currentUserId && (
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteReview(review._id)
+                                    }
+                                    className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                                    title="Delete review"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                )}
+                              </div>
+                              <p className="text-gray-700 leading-relaxed">
+                                {review.comment || "No comment provided"}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 )}
               </div>

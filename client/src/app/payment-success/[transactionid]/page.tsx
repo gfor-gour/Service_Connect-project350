@@ -86,41 +86,44 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="flex bg-white min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-white">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main content area */}
-      <div className="flex-1 p-4">
-        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg mx-auto">
-          <h2 className="text-2xl font-semibold text-green-600">
-            Payment Successful
-          </h2>
-          <p className="mt-2 text-gray-800">Thank you for your payment!</p>
+      <div className="flex-1 min-h-screen transition-all duration-300 ease-in-out px-4 md:px-0 md:pt-14 lg:pl-64">
+        <div className="py-6 md:p-8 w-full max-w-3xl mx-auto">
+          <div className="bg-white shadow-lg rounded-2xl p-6">
+            <h2 className="text-2xl font-semibold text-green-600">
+              Payment Successful
+            </h2>
+            <p className="mt-2 text-gray-800">Thank you for your payment!</p>
 
-          <div className="mt-4 border-t pt-4">
-            <p>
-              <strong>Transaction ID:</strong> {transaction._id}
-            </p>
-            <p>
-              <strong>Name:</strong> {transaction.name}
-            </p>
-            <p>
-              <strong>Address:</strong> {transaction.address}
-            </p>
-            <p>
-              <strong>Amount:</strong> BDT {transaction.price}
-            </p>
-            <p>
-              <strong>Status:</strong> {transaction.status}
-            </p>
+            <div className="mt-4 border-t pt-4 space-y-2">
+              <p>
+                <strong>Transaction ID:</strong> {transaction._id}
+              </p>
+              <p>
+                <strong>Name:</strong> {transaction.name}
+              </p>
+              <p>
+                <strong>Address:</strong> {transaction.address}
+              </p>
+              <p>
+                <strong>Amount:</strong> BDT {transaction.price}
+              </p>
+              <p>
+                <strong>Status:</strong> {transaction.status}
+              </p>
+            </div>
+
+            <button
+              onClick={downloadPDF}
+              className="mt-6 text-white bg-gray-800 px-6 py-3 rounded-lg hover:bg-gray-900 transition"
+            >
+              Download PDF
+            </button>
           </div>
-          <button
-            onClick={downloadPDF}
-            className="mt-4 text-white bg-gray-800 px-4 py-2 rounded-lg hover:bg-gray-700"
-          >
-            Download PDF
-          </button>
         </div>
       </div>
     </div>

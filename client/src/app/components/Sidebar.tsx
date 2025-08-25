@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -177,18 +176,19 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle }) => {
         </button>
       </div>
 
-      {/* Mobile sidebar */}
+      {/* Mobile toggle button */}
       <button
-        className="lg:hidden fixed top-4 left-4 z-[60] p-3 bg-black text-white rounded-full shadow-lg hover:bg-gray-700 transition-colors"
+        className="lg:hidden fixed top-4 right-4 z-[60] p-3 bg-black text-white rounded-full shadow-lg hover:bg-gray-700 transition-colors"
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label="Toggle menu"
       >
         {sidebarOpen ? <X size={28} /> : <Menu size={28} />}
       </button>
 
+      {/* Mobile sidebar (right side) */}
       <div
-        className={`lg:hidden fixed inset-y-0 left-0 w-[280px] bg-white text-black py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 shadow-xl ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`lg:hidden fixed inset-y-0 right-0 w-[280px] bg-white text-black py-8 px-6 transform transition-transform duration-300 ease-in-out z-50 shadow-xl ${
+          sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="h-full flex flex-col pt-12">
